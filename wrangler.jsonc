@@ -5,7 +5,12 @@
         "bucket": "./.cloudflare/public"
     },
     "build": {
-        "command": "npm run build"
+        "command": "pnpm run build"
     },
-    "compatibility_date": "2026-01-23"
+    "compatibility_date": "2026-01-23",
+    "node_compat": true,
+    "vars": {
+        "NODE_VERSION": "24",
+        "PNPM_VERSION": "10"
+    }
 }
