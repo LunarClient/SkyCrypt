@@ -9,6 +9,7 @@ import nightblueTheme from "./nightblue.json";
 import skyleaTheme from "./skylea.json";
 import sunrise from "./sunrise.json";
 import warpwing from "./warpwing.json";
+import lunarTheme from "./lunar.json";
 
 export type Theme = {
   id: string;
@@ -36,5 +37,5 @@ export type Theme = {
   colors?: { [key: string]: string };
 };
 
-const themes: Theme[] = [defaultTheme as Theme, aprilFools2024Theme as Theme, burningCinnabarTheme as Theme, candycaneTheme as Theme, draconicTheme as Theme, lightTheme as Theme, nightblueTheme as Theme, skyleaTheme as Theme, sunrise as Theme, warpwing as Theme, minionah as Theme];
+const themes: Theme[] = [defaultTheme as Theme, aprilFools2024Theme as Theme, burningCinnabarTheme as Theme, candycaneTheme as Theme, draconicTheme as Theme, lightTheme as Theme, nightblueTheme as Theme, skyleaTheme as Theme, sunrise as Theme, warpwing as Theme, minionah as Theme, lunarTheme as Theme];
 export default themes;
