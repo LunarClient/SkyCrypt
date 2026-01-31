@@ -9,6 +9,7 @@
   import { Tabs } from "bits-ui";
 
   const COMPONENTS = {
+    Overview: () => import("$lib/sections/stats/Overview.svelte"),
     Gear: () => import("$lib/sections/stats/Gear.svelte"),
     Accessories: () => import("$lib/sections/stats/Accessories.svelte"),
     Pets: () => import("$lib/sections/stats/Pets.svelte"),

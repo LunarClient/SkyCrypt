@@ -206,9 +206,11 @@
   <PerformanceMode />
 {/if}
 
-<div class="pointer-events-none fixed inset-0 z-[-1] h-dvh w-screen [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat"></div>
+<!--
+<div class="pointer-events-none fixed inset-0 z-[-1] h-dvh w-screen [background-image:var(&#45;&#45;bg-url)] bg-cover bg-scroll bg-center bg-no-repeat"></div>
+-->
 
-<Header />
+<!--<Header />-->
 
 <Tooltip.Provider delayDuration={0}>
   {@render children()}
