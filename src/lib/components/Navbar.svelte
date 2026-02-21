@@ -39,9 +39,8 @@
     })
   );
 
-  let pinned = $state(false);
+  let pinned = $state(true);
   let navbarElement = $state<HTMLDivElement | null>(null);
-  let observer: IntersectionObserver;
 
   function handleSectionClick(sectionName: SectionName) {
     tabValue.set(sectionName);
@@ -72,46 +71,6 @@
 
     link.scrollIntoView(scrollOptions);
   }
-
-  function observerInit() {
-    if (!navbarElement) {
-      console.warn("Navbar element is not defined");
-      return;
-    }
-
-    const topValue = parseInt(window.getComputedStyle(navbarElement).getPropertyValue("top"));
-    console.info("topvalue = " + topValue);
-    observer = new IntersectionObserver(
-      ([e]) => {
-        // Check if the element has reached its sticky position by comparing
-        // its actual top position to the CSS top value
-        const hasReachedStickyPosition = e.boundingClientRect.top <= topValue;
-        pinned = hasReachedStickyPosition && e.intersectionRatio < 1;
-      },
-      {
-        threshold: [1],
-        rootMargin: `-${topValue + 1}px 0px` // shrink the viewport to element top value +1px to trigger observer when element has reach it's sticky position
-      }
-    );
-
-    observer.observe(navbarElement);
-  }
-
-  function observerCleanup() {
-    if (observer) observer.disconnect();
-  }
-
-  $effect(() => {
-    if (!navbarElement) return;
-    observerInit();
-    return () => {
-      observerCleanup();
-    };
-  });
-
-  onDestroy(() => {
-    observerCleanup();
-  });
 
   // Effect to handle tab value changes and update URL
   $effect(() => {
