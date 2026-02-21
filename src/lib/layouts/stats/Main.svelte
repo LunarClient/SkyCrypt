@@ -45,7 +45,13 @@
 
   // Initialize the profile context
   const profileClass = new ProfileContext();
+  profileClass.current = profile;
   setProfileContext(profileClass);
+
+  // Update the profile context when the data changes
+  $effect.pre(() => {
+    profileClass.current = profile;
+  });
 
   function rewriteURL() {
     if (!(ctx as ModelsStatsOutput)) return;
@@ -95,11 +101,6 @@
     }
 
     return searches;
-  });
-
-  // Update the profile context when the data changes
-  $effect.pre(() => {
-    profileClass.current = profile;
   });
 
   $effect(() => {

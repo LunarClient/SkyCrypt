@@ -80,7 +80,7 @@
     }
 
     const topValue = parseInt(window.getComputedStyle(navbarElement).getPropertyValue("top"));
-
+    console.info("topvalue = " + topValue);
     observer = new IntersectionObserver(
       ([e]) => {
         // Check if the element has reached its sticky position by comparing
