@@ -10,7 +10,7 @@
   import ChevronLeft from "@lucide/svelte/icons/chevron-left";
   import ChevronRight from "@lucide/svelte/icons/chevron-right";
   import { Button, ScrollArea } from "bits-ui";
-  import { onDestroy, tick, type Snippet } from "svelte";
+  import { tick, type Snippet } from "svelte";
   const { children }: { children?: Snippet } = $props();
 
   const profile = $derived(getProfileContext().current);
