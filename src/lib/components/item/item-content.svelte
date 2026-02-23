@@ -58,7 +58,7 @@
 <div class="contents" {@attach animateObfuscatedText}>
   <div class={cn(`flex flex-nowrap items-center justify-center gap-4 p-5 nice-colors-dark`, { "rounded-t-[10px]": isDrawer }, bgColor)}>
     <Avatar.Root class="shrink-0 px-2">
-      <Avatar.Image loading="lazy" src={piece?.texture_path} alt={piece?.display_name} class="h-auto w-8 flex-none shrink-0 overflow-hidden [image-rendering:pixelated] data-[enchanted=true]:enchanted" data-enchanted={enchanted} />
+      <Avatar.Image loading="lazy" src={piece?.texture_path} alt={piece?.display_name} class="h-auto w-8 flex-none shrink-0 overflow-hidden class="pixelated" data-[enchanted=true]:enchanted" data-enchanted={enchanted} />
       <Avatar.Fallback>
         <Image class="size-8" />
       </Avatar.Fallback>
@@ -98,7 +98,7 @@
           <div class="flex items-center justify-between gap-4 rounded-[0.625rem] bg-text/5 p-2 transition-colors ease-out hover:bg-text/8">
             <div class="flex items-center gap-2">
               <Avatar.Root class="shrink-0 select-none">
-                <Avatar.Image loading="lazy" src={piece.sourceTab.icon} alt={piece.sourceTab.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none [image-rendering:pixelated]" />
+                <Avatar.Image loading="lazy" src={piece.sourceTab.icon} alt={piece.sourceTab.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none class="pixelated"" />
                 <Avatar.Fallback class="flex size-10 items-center justify-center rounded-lg bg-icon/90 text-center font-semibold uppercase">
                   {piece.sourceTab.name?.slice(0, 2)}
                 </Avatar.Fallback>
@@ -124,7 +124,7 @@
             <div class="flex items-center justify-between gap-4 rounded-[0.625rem] bg-text/5 p-2 transition-colors ease-out hover:bg-text/8">
               <div class="flex items-center gap-2">
                 <Avatar.Root class="shrink-0 select-none">
-                  <Avatar.Image loading="lazy" src={packData.icon} alt={packData.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none [image-rendering:pixelated]" />
+                  <Avatar.Image loading="lazy" src={packData.icon} alt={packData.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none class="pixelated"" />
                   <Avatar.Fallback class="flex size-10 items-center justify-center rounded-lg bg-icon/90 text-center font-semibold uppercase">
                     {packData.name?.slice(0, 2)}
                   </Avatar.Fallback>
