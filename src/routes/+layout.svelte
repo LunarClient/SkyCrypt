@@ -317,7 +317,7 @@
                 {#if !ign || recentSearch.ign !== ign}
                   <Command.LinkItem value={recentSearch.ign} href="/stats/{recentSearch.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[recentSearch.ign, "profile", "player", "favorite", "favorites"]}>
                     <Avatar.Root class="size-4 shrink-0 bg-text/10">
-                      <Avatar.Image loading="lazy" src={recentSearch.uuid ? `https://nmsr.nickac.dev/face/${recentSearch.uuid}` : "https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40"} alt={recentSearch.ign} class="aspect-square size-4 class="pixelated"" />
+                      <Avatar.Image loading="lazy" src={recentSearch.uuid ? `https://nmsr.nickac.dev/face/${recentSearch.uuid}` : "https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40"} alt={recentSearch.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
                       <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
                         {recentSearch.ign.slice(0, 2)}
                       </Avatar.Fallback>
@@ -338,7 +338,7 @@
                 {#if !ign || favorite.ign !== ign}
                   <Command.LinkItem value={favorite.ign} href="/stats/{favorite.ign}" class={cn("flex h-10 cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none", $performanceMode ? "data-selected:bg-background-lore" : "data-selected:bg-background-grey")} keywords={[favorite.ign, favorite.uuid, "profile", "player", "favorite", "favorites"]}>
                     <Avatar.Root class="size-4 shrink-0 bg-text/10">
-                      <Avatar.Image loading="lazy" src={`https://nmsr.nickac.dev/face/${favorite.uuid}`} alt={favorite.ign} class="aspect-square size-4 class="pixelated"" />
+                      <Avatar.Image loading="lazy" src={`https://nmsr.nickac.dev/face/${favorite.uuid}`} alt={favorite.ign} class="aspect-square size-4 [image-rendering:pixelated]" />
                       <Avatar.Fallback class="flex h-full items-center justify-center text-lg font-semibold text-text/60 uppercase">
                         {favorite.ign.slice(0, 2)}
                       </Avatar.Fallback>

@@ -140,7 +140,7 @@
           <Tooltip.Root disableCloseOnTriggerClick={false}>
             <Tooltip.Trigger onclick={() => content.set(tooltipContent)}>
               <Avatar.Root class="flex aspect-square items-center justify-center rounded-sm bg-text/4 p-1">
-                <Avatar.Image src={plot.texture_path} class="h-auto w-14 select-none class="pixelated"" />
+                <Avatar.Image src={plot.texture_path} class="h-auto w-14 select-none [image-rendering:pixelated]" />
                 <Avatar.Fallback>
                   <Image class="size-full" />
                 </Avatar.Fallback>
