@@ -31,7 +31,7 @@
         <Label.Root for={pack.id} class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
           <div class="flex items-center gap-2">
             <Avatar.Root class="shrink-0 select-none">
-              <Avatar.Image loading="lazy" src={pack.icon} alt={pack.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none pixelated" />
+              <Avatar.Image loading="lazy" src={pack.icon} alt={pack.name} class="pointer-events-none aspect-square size-10 h-full rounded-lg select-none class="pixelated"" />
               <Avatar.Fallback class="flex items-center rounded-lg text-center font-semibold uppercase">{pack.name?.slice(0, 2)}</Avatar.Fallback>
             </Avatar.Root>
             <div class="flex flex-col">

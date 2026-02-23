@@ -36,7 +36,7 @@
                 <div class="relative flex min-w-[min(20.625rem,100vw)] flex-col items-center gap-1 space-y-5 overflow-hidden rounded-lg bg-background/30">
                   <div class="flex w-full items-center justify-center gap-1.5 border-b-2 border-icon py-2 text-center font-semibold uppercase">
                     <Avatar.Root>
-                      <Avatar.Image loading="lazy" src={value.texture} class="size-8 object-contain pixelated" />
+                      <Avatar.Image loading="lazy" src={value.texture} class="size-8 object-contain class="pixelated"" />
                       <Avatar.Fallback>
                         <Image class="size-8" />
                       </Avatar.Fallback>
