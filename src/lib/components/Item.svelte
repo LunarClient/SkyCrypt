@@ -57,7 +57,7 @@
       <div {...props}>
         {#if hasBeenInViewport}
           <Avatar.Root bind:loadingStatus>
-            <Avatar.Image loading="lazy" src={piece.texture_path} alt={piece.display_name} class={cn("pointer-events-none aspect-square select-none class="pixelated" data-[enchanted=true]:enchanted", isInventory ? "size-6 sm:size-14" : "size-14")} data-enchanted={enchanted} />
+            <Avatar.Image loading="lazy" src={piece.texture_path} alt={piece.display_name} class={cn("pointer-events-none aspect-square select-none pixelated data-[enchanted=true]:enchanted", isInventory ? "size-6 sm:size-14" : "size-14")} data-enchanted={enchanted} />
             {#if loadingStatus === "loading"}
               {@render loadingState()}
             {:else}

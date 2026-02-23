@@ -24,7 +24,7 @@
 <div class={cn("group relative flex grow basis-full flex-col sm:basis-1/3 sm:last:grow-0 sm:last:basis-1/2", !apiEnabled && "opacity-50 grayscale", className)} data-maxed={isMaxed} use:hoverAction>
   <div class={cn("absolute bottom-0 left-0 z-10 flex size-9 items-center justify-center rounded-full p-1 drop-shadow-sm group-data-[maxed=false]:bg-icon group-data-[maxed=true]:bg-maxed", apiEnabled ? "" : "bg-gray-600", { "group-data-[maxed=true]:shine": !$performanceMode })}>
     <Avatar.Root class="select-none">
-      <Avatar.Image loading="lazy" class={cn("pointer-events-none size-6.5 class="pixelated"", !apiEnabled && "grayscale")} src={skillData.texture} alt={skill} />
+      <Avatar.Image loading="lazy" class={cn("pointer-events-none size-6.5 pixelated", !apiEnabled && "grayscale")} src={skillData.texture} alt={skill} />
       <Avatar.Fallback>
         <BarChartHorizontal class="pointer-events-none size-6" />
       </Avatar.Fallback>
