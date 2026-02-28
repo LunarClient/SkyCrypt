@@ -185,7 +185,7 @@
   </div>
 </div>
 
-<div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+<!--<div class="flex flex-wrap items-center gap-x-4 gap-y-2">
   <Tooltip.Root bind:open={favoriteTooltipOpen} disableCloseOnTriggerClick={false}>
     <Tooltip.Trigger
       class="aspect-square rounded-full bg-icon/90 p-2 transition-opacity duration-150 ease-out hover:bg-icon"
@@ -298,7 +298,7 @@
       <ChevronRight class="size-4" />
     {/if}
   </Button.Root>
-</div>
+</div>-->
 
 {#snippet profileIcon(gameMode: string)}
   {#if gameMode === "bingo"}
