@@ -39,7 +39,7 @@
     })
   );
 
-  let pinned = $state(false);
+  let pinned = $state(true);
   let navbarElement = $state<HTMLDivElement | null>(null);
 
   function handleSectionClick(sectionName: SectionName) {
