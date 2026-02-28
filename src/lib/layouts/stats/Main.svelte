@@ -200,7 +200,7 @@
     </Pane>
   </PaneGroup> -->
   <!-- TODO: See the paneforge todo above  -->
-  <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">
+  <div class="@container fixed inset-y-0 left-0 z-10 hidden h-dvh w-[30vw] @[75rem]/parent:block">
     {#if $performanceMode && !showStaticSkin}
       <Avatar.Root class="flex size-full items-center justify-center">
         {#snippet child({ props })}
@@ -217,10 +217,10 @@
     {/if}
   </div>
 
-<!--
+  <!--
   <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", $performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
 -->
-  <main data-vaul-drawer-wrapper class="@container relative mx-auto @[75rem]/parent:ml-[30vw]">
+  <main data-vaul-drawer-wrapper class="@container relative mx-auto h-dvh overflow-hidden @[75rem]/parent:ml-[30vw]">
     {#if getProfileContext().current}
       <Navbar>
         <Sections />

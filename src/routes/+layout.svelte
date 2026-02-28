@@ -30,7 +30,7 @@
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { isHttpError, type RemoteQuery } from "@sveltejs/kit";
   import { Avatar, Button, Command, computeCommandScore, Dialog, Tooltip } from "bits-ui";
-  import { onMount, type Snippet } from "svelte";
+  import { onDestroy, onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
   import { cubicOut } from "svelte/easing";
@@ -120,6 +120,10 @@
     if (window.innerWidth <= 600) {
       position.set("bottom-center");
     }
+  });
+
+  onDestroy(() => {
+    isHover.destroy();
   });
 
   beforeNavigate(({ type }) => {

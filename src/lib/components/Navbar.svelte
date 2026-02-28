@@ -84,41 +84,47 @@
   });
 </script>
 
-<ScrollAreaPrimitive type="always" class="navbar group sticky! top-[env(safe-area-inset-top,0)] z-20 overflow-clip" data-pinned={pinned} bind:ref={navbarElement} orientation="horizontal">
-  {#snippet viewportChildren()}
-    <div class="flex! flex-nowrap items-center gap-2 pb-2 font-semibold whitespace-nowrap text-text/80">
-      <div class="absolute bottom-1.75 z-1 h-0.5 w-[calc(100%+0.5rem)] bg-icon"></div>
-      <div class={cn("absolute inset-0 bottom-2", $performanceMode ? "group-data-[pinned=true]:bg-header" : "transition duration-50 ease-out group-data-[pinned=true]:group-data-[mode=dark]/html:bg-[oklch(19.13%_0_0)]/90 group-data-[pinned=true]:group-data-[mode=light]/html:bg-[oklch(95.51%_0_0)]/92")}></div>
-      {#each filteredSectionOrderPreferences as section, index (index)}
-        <Button.Root class="relative px-2 py-3 after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:bg-icon after:transition-all after:duration-100 after:ease-out hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:text-text data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-id={section.name} data-active={$tabValue === section.name} onclick={() => handleSectionClick(section.name)}>
-          {section.name?.replaceAll("_", " ")}
-        </Button.Root>
-      {/each}
+<div class="flex h-full min-h-0 flex-col">
+  <ScrollAreaPrimitive type="always" class="navbar group sticky! top-[env(safe-area-inset-top,0)] z-20 flex-none overflow-clip" data-pinned={pinned} bind:ref={navbarElement} orientation="horizontal">
+    {#snippet viewportChildren()}
+      <div class="flex! flex-nowrap items-center gap-2 pb-2 font-semibold whitespace-nowrap text-text/80">
+        <div class="absolute bottom-1.75 z-1 h-0.5 w-[calc(100%+0.5rem)] bg-icon"></div>
+        <div class={cn("absolute inset-0 bottom-2", $performanceMode ? "group-data-[pinned=true]:bg-header" : "transition duration-50 ease-out group-data-[pinned=true]:group-data-[mode=dark]/html:bg-[oklch(19.13%_0_0)]/90 group-data-[pinned=true]:group-data-[mode=light]/html:bg-[oklch(95.51%_0_0)]/92")}></div>
+        {#each filteredSectionOrderPreferences as section, index (index)}
+          <Button.Root class="relative px-2 py-3 after:absolute after:top-full after:left-0 after:h-0 after:w-full after:origin-top after:rounded-full after:bg-icon after:transition-all after:duration-100 after:ease-out hover:after:top-[calc(100%-4px)] hover:after:h-2 data-[active=true]:text-text data-[active=true]:after:top-[calc(100%-4px)] data-[active=true]:after:h-2" data-id={section.name} data-active={$tabValue === section.name} onclick={() => handleSectionClick(section.name)}>
+            {section.name?.replaceAll("_", " ")}
+          </Button.Root>
+        {/each}
+      </div>
+    {/snippet}
+
+    <ScrollArea.Scrollbar orientation="horizontal" class="z-10 flex h-0.5 w-full origin-center -translate-y-[0.44rem] touch-none transition-all duration-300 ease-out select-none group-hover:h-2 group-hover:-translate-y-1">
+      <ScrollArea.Thumb class="rounded-full bg-icon" />
+    </ScrollArea.Scrollbar>
+  </ScrollAreaPrimitive>
+
+  <div class="flex min-h-0 flex-1 flex-col">
+    <div class="min-h-0 flex-1 overflow-y-auto px-4 @[75rem]/parent:px-8">
+      <div class="flex flex-col flex-nowrap gap-y-5 py-4 @[75rem]/parent:py-8">
+        {@render children?.()}
+      </div>
     </div>
-  {/snippet}
 
-  <ScrollArea.Scrollbar orientation="horizontal" class="z-10 flex h-0.5 w-full origin-center -translate-y-[0.44rem] touch-none transition-all duration-300 ease-out select-none group-hover:h-2 group-hover:-translate-y-1">
-    <ScrollArea.Thumb class="rounded-full bg-icon" />
-  </ScrollArea.Scrollbar>
-</ScrollAreaPrimitive>
-
-<div class="flex flex-col flex-nowrap gap-y-5 px-4 pb-4 @[75rem]/parent:px-8 @[75rem]/parent:pb-8">
-  {@render children?.()}
-
-  <div class="flex items-center justify-between">
-    {#if previousSection}
-      <Button.Root class="flex items-center justify-between rounded-lg bg-icon px-4 py-2 text-lg" onclick={() => handleSectionClick(previousSection.name ?? filteredSectionOrderPreferences[0].name)}>
-        <ChevronLeft />
-        {previousSection.name.replaceAll("_", " ")}
-      </Button.Root>
-    {:else}
-      <div></div>
-    {/if}
-    {#if nextSection}
-      <Button.Root class="flex items-center justify-between rounded-lg bg-icon px-4 py-2 text-lg" onclick={() => handleSectionClick(nextSection.name ?? filteredSectionOrderPreferences[filteredSectionOrderPreferences.length - 1].name)}>
-        {nextSection.name.replaceAll("_", " ")}
-        <ChevronRight />
-      </Button.Root>
-    {/if}
+    <div class="flex items-center justify-between px-4 pb-4 @[75rem]/parent:px-8 @[75rem]/parent:pb-8">
+      {#if previousSection}
+        <Button.Root class="flex items-center justify-between rounded-lg bg-icon px-4 py-2 text-lg" onclick={() => handleSectionClick(previousSection.name ?? filteredSectionOrderPreferences[0].name)}>
+          <ChevronLeft />
+          {previousSection.name.replaceAll("_", " ")}
+        </Button.Root>
+      {:else}
+        <div></div>
+      {/if}
+      {#if nextSection}
+        <Button.Root class="flex items-center justify-between rounded-lg bg-icon px-4 py-2 text-lg" onclick={() => handleSectionClick(nextSection.name ?? filteredSectionOrderPreferences[filteredSectionOrderPreferences.length - 1].name)}>
+          {nextSection.name.replaceAll("_", " ")}
+          <ChevronRight />
+        </Button.Root>
+      {/if}
+    </div>
   </div>
 </div>

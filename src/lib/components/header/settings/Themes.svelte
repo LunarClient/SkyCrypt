@@ -2,8 +2,8 @@
   function changeTheme(themeId: Theme["id"]) {
     const theme = themes.find((theme) => theme.id === themeId);
     if (!theme) {
-      themeStore.set("default");
-      document.documentElement.dataset.theme = "default";
+      themeStore.set("lunar");
+      document.documentElement.dataset.theme = "lunar";
       return;
     }
     if (theme.light) {
