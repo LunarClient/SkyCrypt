@@ -196,8 +196,10 @@
     </Pane>
   </PaneGroup> -->
   <!-- TODO: See the paneforge todo above  -->
-  <div class="@container fixed inset-y-0 left-0 z-10 hidden h-dvh w-[30vw] @[75rem]/parent:block">
+  <div class="absolute top-0 left-0 z-20">
     <Settings />
+  </div>
+  <div class="@container fixed inset-y-0 left-0 z-10 hidden h-dvh w-[30vw] @[75rem]/parent:block">
     <Avatar.Root class="flex size-full items-center justify-center">
       {#snippet child({ props })}
         <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
