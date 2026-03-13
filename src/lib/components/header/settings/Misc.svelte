@@ -110,7 +110,7 @@
         {/snippet}
       </SettingToggleRow>
 
-      <SettingToggleRow id="rainbow" title="Rainbow Colors" titleClass="group-data-[rainbow=true]/html:chroma-gradient" description="Enable rainbow colors animation for maxed enchants on items." checked={preferences.rainbowEnchantments} onCheckedChange={() => (preferences.rainbowEnchantments = !preferences.rainbowEnchantments)}>
+      <!--<SettingToggleRow id="rainbow" title="Rainbow Colors" titleClass="group-data-[rainbow=true]/html:chroma-gradient" description="Enable rainbow colors animation for maxed enchants on items." checked={preferences.rainbowEnchantments} onCheckedChange={() => (preferences.rainbowEnchantments = !preferences.rainbowEnchantments)}>
         {#snippet icon()}
           <Rainbow class="size-6 h-lh shrink-0" />
         {/snippet}
@@ -131,9 +131,9 @@
             <span class="min-w-2 text-center">{preferences.keybind}</span>
           {/if}
         </Button.Root>
-      </div>
+      </div>-->
     </div>
-    <Separator.Root class="shrink-0 bg-icon/30 data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-0.5" />
+    <!--<Separator.Root class="shrink-0 bg-icon/30 data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-0.5" />
     <div class="space-y-4 rounded-lg bg-text/5 p-4">
       <div class="flex items-start gap-2 rounded-lg p-2 font-semibold">
         <BookOpenText class="size-5 h-lh shrink-0" />
@@ -182,6 +182,6 @@
           Reset to default
         </Button.Root>
       {/if}
-    </div>
+    </div>-->
   </div>
 </Tabs.Content>

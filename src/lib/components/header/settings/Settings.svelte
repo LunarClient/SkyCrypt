@@ -33,10 +33,10 @@
         <PaintBucket class="size-5" />
         Themes
       </Tabs.Trigger>
-      <Tabs.Trigger value={SettingsTab.Order} class="flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold data-[state=active]:bg-icon/80">
+      <!--<Tabs.Trigger value={SettingsTab.Order} class="flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold data-[state=active]:bg-icon/80">
         <ListOrdered class="size-5" />
         Order
-      </Tabs.Trigger>
+      </Tabs.Trigger>-->
       <Tabs.Trigger value={SettingsTab.Misc} class="flex shrink items-center justify-center gap-1 rounded-lg px-2.5 py-1 text-sm font-semibold data-[state=active]:bg-icon/80">
         <Settings class="size-5" />
         Misc
@@ -44,7 +44,7 @@
     </Tabs.List>
     <Packs />
     <Themes />
-    <Order />
+    <!--<Order />-->
     <Misc />
   </Tabs.Root>
 {/snippet}
