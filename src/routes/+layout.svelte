@@ -13,7 +13,7 @@
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { Tooltip } from "bits-ui";
-  import { onMount, type Snippet } from "svelte";
+  import { onDestroy, onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
   import { SvelteURLSearchParams } from "svelte/reactivity";
@@ -80,6 +80,10 @@
     if (window.innerWidth <= 600) {
       position.set("bottom-center");
     }
+  });
+
+  onDestroy(() => {
+    isHover.destroy();
   });
 
   beforeNavigate(({ type }) => {
