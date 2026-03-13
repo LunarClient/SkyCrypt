@@ -1,57 +1,16 @@
 <script lang="ts">
-  import { getPreferences, getWikiOrder } from "$ctx";
+  import { getPreferences } from "$ctx";
   import { SettingsTab } from "$lib/components/header/types";
-  import { sections } from "$lib/sections/constants";
   import { cn, flyAndScale } from "$lib/shared/utils";
-  import BookOpenText from "@lucide/svelte/icons/book-open-text";
   import CircleQuestionMark from "@lucide/svelte/icons/circle-question-mark";
   import Fan from "@lucide/svelte/icons/fan";
-  import GripVertical from "@lucide/svelte/icons/grip-vertical";
-  import Keyboard from "@lucide/svelte/icons/keyboard";
   import Pickaxe from "@lucide/svelte/icons/pickaxe";
-  import Rainbow from "@lucide/svelte/icons/rainbow";
   import Settings2 from "@lucide/svelte/icons/settings-2";
   import Sparkle from "@lucide/svelte/icons/sparkle";
-  import { Button, Separator, Tabs, Tooltip } from "bits-ui";
-  import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from "svelte-dnd-action";
-  import { flip } from "svelte/animate";
-  import { cubicOut } from "svelte/easing";
-  import { fade } from "svelte/transition";
+  import { Tabs, Tooltip } from "bits-ui";
   import SettingToggleRow from "./SettingToggleRow.svelte";
 
   const preferences = getPreferences();
-  const wikiOrderContext = getWikiOrder();
-  const initialWikiOrderPreferences = wikiOrderContext.current;
-
-  let isListening = $state(false);
-  let wikiOrder = $state(initialWikiOrderPreferences);
-
-  const defaultSectionOrder = sections;
-  const differsFromDefault = $derived(JSON.stringify(preferences.sectionOrder) !== JSON.stringify(defaultSectionOrder));
-
-  function handleKeybindKeydown(e: KeyboardEvent) {
-    if (isListening) {
-      e.preventDefault();
-      e.stopPropagation();
-      const key = e.key;
-      if (key.length === 1 && key.match(/[a-zA-Z0-9/\\.,;'"`~!@#$%^&*()_+\-=[\]{}|:<>?]/)) {
-        preferences.keybind = key;
-        isListening = false;
-      } else if (key === "Escape") {
-        isListening = false;
-        preferences.keybind = preferences.keybind || "/";
-      }
-    }
-  }
-
-  function handleKeybindClick() {
-    isListening = true;
-    setTimeout(() => {
-      if (isListening) {
-        isListening = false;
-      }
-    }, 5000);
-  }
 </script>
 
 <Tabs.Content value={SettingsTab.Misc} class="space-y-6">
@@ -109,79 +68,6 @@
           <Pickaxe class="size-6 h-lh shrink-0" />
         {/snippet}
       </SettingToggleRow>
-
-      <SettingToggleRow id="rainbow" title="Rainbow Colors" titleClass="group-data-[rainbow=true]/html:chroma-gradient" description="Enable rainbow colors animation for maxed enchants on items." checked={preferences.rainbowEnchantments} onCheckedChange={() => (preferences.rainbowEnchantments = !preferences.rainbowEnchantments)}>
-        {#snippet icon()}
-          <Rainbow class="size-6 h-lh shrink-0" />
-        {/snippet}
-      </SettingToggleRow>
-
-      <div class="flex items-center justify-between gap-4 rounded-lg bg-text/5 p-2">
-        <div class="flex items-start gap-2">
-          <Keyboard class="size-6 h-lh shrink-0" />
-          <div class="flex flex-col">
-            <h4 class="font-semibold text-text/90">Keybind</h4>
-            <p class="text-text/60">Set the keybind to open the command menu</p>
-          </div>
-        </div>
-        <Button.Root class="flex h-8 min-w-8 items-center justify-center rounded-md border border-text/20 bg-text/10 px-2 py-1 font-mono text-sm font-semibold text-text/90 transition-colors ease-out hover:bg-text/20 focus:ring-2 focus:ring-icon/50 focus:outline-none" onclick={handleKeybindClick} onkeydown={handleKeybindKeydown} tabindex={0}>
-          {#if isListening}
-            <span class="animate-pulse text-icon">Press a key</span>
-          {:else}
-            <span class="min-w-2 text-center">{preferences.keybind}</span>
-          {/if}
-        </Button.Root>
-      </div>
-    </div>
-    <Separator.Root class="shrink-0 bg-icon/30 data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-0.5" />
-    <div class="space-y-4 rounded-lg bg-text/5 p-4">
-      <div class="flex items-start gap-2 rounded-lg p-2 font-semibold">
-        <BookOpenText class="size-5 h-lh shrink-0" />
-        <div class="">
-          <h4>Wiki Order</h4>
-          <div class="space-y-2">
-            <p class="text-text/60">Drag and drop the wiki sources to reorder them as you like.</p>
-            <p class="text-text/60">If the wiki source isn't available, the next one in the list will be used.</p>
-          </div>
-        </div>
-      </div>
-      <div
-        class="flex max-h-96 flex-col gap-4 overflow-x-clip overflow-y-auto"
-        use:dndzone={{ items: wikiOrder, flipDurationMs: 300, dropTargetStyle: {} }}
-        onconsider={(e) => (wikiOrder = e.detail.items)}
-        onfinalize={(e) => {
-          wikiOrderContext.current = e.detail.items;
-          wikiOrder = e.detail.items;
-        }}>
-        {#each wikiOrder as wiki (wiki.id)}
-          {@const normalizedName = wiki.name.replaceAll("_", " ")}
-          <div animate:flip={{ duration: 300, easing: cubicOut }} class="relative flex items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold">
-            <GripVertical class="size-5 shrink-0 text-text/60" />
-            <div class="flex flex-col">
-              {normalizedName}
-              <Button.Root href={wiki.link} target="_blank" class="text-link/60 underline">{new URL(wiki.link).hostname}</Button.Root>
-            </div>
-            {#if SHADOW_ITEM_MARKER_PROPERTY_NAME in wiki && wiki[SHADOW_ITEM_MARKER_PROPERTY_NAME]}
-              <div in:fade={{ duration: 300, easing: cubicOut }} class="visible absolute inset-0 flex animate-pulse items-center gap-2 rounded-lg bg-text/5 p-2 font-semibold opacity-30">
-                <GripVertical class="size-5 shrink-0 text-text/60" />
-                <div class="flex flex-col">
-                  {normalizedName}
-                  <Button.Root href={wiki.link} target="_blank" class="text-link/60 underline">{new URL(wiki.link).hostname}</Button.Root>
-                </div>
-              </div>
-            {/if}
-          </div>
-        {/each}
-      </div>
-      {#if differsFromDefault}
-        <Button.Root
-          class="mt-4 w-full rounded-lg bg-text/65 p-1.5 text-sm font-semibold text-background/80 uppercase transition-colors ease-out hover:bg-text/80"
-          onclick={() => {
-            preferences.sectionOrder = defaultSectionOrder;
-          }}>
-          Reset to default
-        </Button.Root>
-      {/if}
     </div>
   </div>
 </Tabs.Content>

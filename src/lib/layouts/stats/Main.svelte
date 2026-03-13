@@ -1,22 +1,16 @@
 <script lang="ts">
-  import { browser } from "$app/environment";
   import { replaceState } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
   import { getHoverContext, getInternalState, getPreferences, getProfileContext, getRecentSearches, ProfileContext, setProfileContext } from "$ctx";
+  import Settings from "$lib/components/header/settings";
   import { ContainedItemsGrid, ItemContent } from "$lib/components/item";
   import { Navbar } from "$lib/components/misc";
-  import Skin3D from "$lib/components/misc/Skin3D.svelte";
-  import AdditionalStats from "$lib/layouts/stats/AdditionalStats.svelte";
-  import PlayerProfile from "$lib/layouts/stats/PlayerProfile.svelte";
-  import Skills from "$lib/layouts/stats/Skills.svelte";
-  import Stats from "$lib/layouts/stats/Stats.svelte";
   import Sections from "$lib/sections/Sections.svelte";
   import type { ModelsStatsOutput } from "$lib/shared/api/orval-generated";
   import { cn, flyAndScale } from "$lib/shared/utils";
   import Image from "@lucide/svelte/icons/image";
   import { Avatar, Dialog } from "bits-ui";
-  import { Pane } from "paneforge";
   import { onDestroy, tick, untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
@@ -31,14 +25,7 @@
 
   const profile = $derived(ctx);
 
-  let showStaticSkin = $state(false);
-  let _rightSize = $state(0);
-  let _leftSize = $state(0);
-  let _skinCollapsed = $state(false);
-  let _leftPane = $state<Pane>(null!);
   let innerWidth = $state(window.innerWidth);
-  let _defaultLeftPanel = $derived(Math.ceil((300 / innerWidth) * 100));
-  let _defaultRightPanel = $derived(Math.ceil((700 / innerWidth) * 100));
 
   const abortController = new AbortController();
 
@@ -199,33 +186,25 @@
     </Pane>
   </PaneGroup> -->
   <!-- TODO: See the paneforge todo above  -->
-  <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">
-    {#if preferences.performanceMode && !showStaticSkin}
-      <Avatar.Root class="flex size-full items-center justify-center">
-        {#snippet child({ props })}
-          <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
-            <Avatar.Image loading="lazy" src="https://nmsr.nickac.dev/fullbody/{profile.uuid}?no=shadow" alt="{profile.username}'s avatar" class="max-h-128 object-cover" />
-            <Avatar.Fallback>
-              <Image class="size-24 object-cover text-text" />
-            </Avatar.Fallback>
-          </div>
-        {/snippet}
-      </Avatar.Root>
-    {:else if browser && innerWidth >= 1024}
-      <Skin3D showStaticSkin={() => (showStaticSkin = true)} class="h-full" />
-    {/if}
+  <div class="absolute top-0 left-0 z-20 hidden h-dvh w-full @[75rem]/parent:block">
+    <Settings />
+  </div>
+  <div class="@container fixed inset-y-0 left-0 z-10 hidden h-dvh w-[30vw] @[75rem]/parent:block">
+    <Avatar.Root class="flex size-full items-center justify-center">
+      {#snippet child({ props })}
+        <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
+          <Avatar.Image loading="lazy" src="https://nmsr.nickac.dev/fullbody/{profile.uuid}?no=shadow" alt="{profile.username}'s avatar" class="max-h-128 object-cover" />
+          <Avatar.Fallback>
+            <Image class="size-24 object-cover text-text" />
+          </Avatar.Fallback>
+        </div>
+      {/snippet}
+    </Avatar.Root>
   </div>
 
   <div class={cn("fixed top-0 right-0 min-h-dvh w-full @[75rem]/parent:w-[calc(100%-30vw)]", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
-  <main data-vaul-drawer-wrapper class="@container relative mx-auto mt-12 @[75rem]/parent:ml-[30vw]">
+  <main data-vaul-drawer-wrapper class="@container relative mx-auto @[75rem]/parent:ml-[30vw]">
     {#if getProfileContext().current}
-      <div class="space-y-5 p-4 @[75rem]/parent:p-8">
-        <PlayerProfile />
-        <Skills />
-        <Stats />
-        <AdditionalStats />
-      </div>
-
       <Navbar>
         <Sections />
       </Navbar>
