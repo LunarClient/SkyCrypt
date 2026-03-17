@@ -186,7 +186,7 @@
     </Pane>
   </PaneGroup> -->
   <!-- TODO: See the paneforge todo above  -->
-  <div class="absolute top-0 left-0 z-20 hidden h-dvh w-full @[75rem]/parent:block">
+  <div class="absolute top-0 left-0 z-20 hidden w-fit @[75rem]/parent:block">
     <Settings />
   </div>
   <div class="@container fixed inset-y-0 left-0 z-10 hidden h-dvh w-[30vw] @[75rem]/parent:block">
