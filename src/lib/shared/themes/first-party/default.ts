@@ -12,8 +12,8 @@ export const defaultTheme = {
     logo: "oklch(77.42% 0.2301 146.782)",
     text: "oklch(1 0 0)",
     background: "oklch(0 0 0)",
-    header: "oklch(0.28 0 0 / 50%)",
-    greyBackground: "transparent",
+    header: "oklch(0.28 0 0)",
+    greyBackground: "oklch(0.24 0 0)",
     loreBackground: "oklch(0.17 0 0 / 0.9)",
     bg: "oklch(0.18 0 0)",
     mctooltipBg: "oklch(12.142% 0.05582 328.352 / 0.93)"

@@ -204,7 +204,6 @@
     </div>
 
     <div class="relative h-full w-full flex-1 overflow-y-auto @[75rem]/parent:w-[calc(100%-30vw)]">
-      <div class={cn("absolute inset-0 -z-10", preferences.performanceMode ? "bg-background-grey" : "backdrop-blur-lg group-data-[mode=dark]/html:backdrop-brightness-50 group-data-[mode=light]/html:backdrop-brightness-100")}></div>
       <main data-vaul-drawer-wrapper class="@container relative mx-auto">
         {#if getProfileContext().current}
           <Navbar>
