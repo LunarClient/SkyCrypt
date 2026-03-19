@@ -4,7 +4,6 @@
   import { page, updated } from "$app/state";
   import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, initWikiOrder, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import { initInternalPreferences } from "$ctx/internal-preferences.svelte";
-  import Header from "$lib/components/header/Header.svelte";
   import { CommandPalette, PerformanceMode } from "$lib/components/misc";
   import ThemeEditor from "$lib/components/theme-editor/ThemeEditor.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
@@ -17,7 +16,7 @@
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { Tooltip } from "bits-ui";
   import { differenceInHours } from "date-fns";
-  import { onMount, type Snippet } from "svelte";
+  import { onDestroy, onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
   import { SvelteURLSearchParams } from "svelte/reactivity";
@@ -100,6 +99,10 @@
     if (window.innerWidth <= 600) {
       position.set("bottom-center");
     }
+  });
+
+  onDestroy(() => {
+    isHover.destroy();
   });
 
   beforeNavigate(({ type }) => {
@@ -253,9 +256,6 @@
   <PerformanceMode />
 {/if}
 
-<div class="pointer-events-none fixed inset-0 z-[-1] h-dvh w-screen [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat"></div>
-
-<Header />
 <Tooltip.Provider delayDuration={0}>
   {@render children()}
 </Tooltip.Provider>
