@@ -170,28 +170,6 @@
 
     if (packsData) packs.packs = packsData;
   });
-
-  // TODO: Remove after the survey is done
-  $effect(() => {
-    const surveyPrefs = internalPreferences?.skycryptSurvey;
-    if (!surveyPrefs) return;
-
-    const dismissedAt = surveyPrefs.dismissedAt ? new Date(surveyPrefs.dismissedAt) : null;
-    const confirmedAt = surveyPrefs.confirmedAt ? new Date(surveyPrefs.confirmedAt) : null;
-    const now = new Date();
-
-    const isDismissedExpired = dismissedAt == null || differenceInHours(now, dismissedAt) > 12;
-    const isConfirmedExpired = confirmedAt == null || differenceInHours(now, confirmedAt) > 12;
-
-    if (isDismissedExpired && isConfirmedExpired) {
-      toast.custom(SurveyNotice, {
-        id: "survey-notice",
-        important: true,
-        duration: Number.POSITIVE_INFINITY,
-        position: "bottom-center"
-      });
-    }
-  });
 </script>
 
 <svelte:document onkeydown={handleKeydown} />

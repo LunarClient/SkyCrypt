@@ -14,6 +14,7 @@
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
   import { Drawer } from "vaul-svelte";
+  import Settings from "$lib/components/header/settings";
 
   const { data: ctx }: { data: ModelsStatsOutput } = $props();
 
@@ -23,8 +24,6 @@
   const internalState = getInternalState();
 
   const profile = $derived(ctx);
-
-  let innerWidth = $state(window.innerWidth);
 
   const abortController = new AbortController();
 
@@ -96,8 +95,6 @@
     abortController.abort();
   });
 </script>
-
-<svelte:window bind:innerWidth />
 
 <div class="@container/parent relative">
   <!-- TODO: Re-enable paneforge once this is fixed: https://github.com/svecosystem/paneforge/issues/89 -->
@@ -179,27 +176,31 @@
     </Pane>
   </PaneGroup> -->
   <!-- TODO: See the paneforge todo above  -->
-  <div class="@container fixed top-1/2 left-0 z-10 hidden h-dvh w-[30vw] -translate-y-1/2 @[75rem]/parent:block">
-    <Avatar.Root class="flex size-full items-center justify-center">
-      {#snippet child({ props })}
-        <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
-          <Avatar.Image loading="lazy" src="https://nmsr.nickac.dev/fullbody/{profile.uuid}?no=shadow" alt="{profile.username}'s avatar" class="max-h-128 object-cover" />
-          <Avatar.Fallback>
-            <Image class="size-24 object-cover text-text" />
-          </Avatar.Fallback>
-        </div>
-      {/snippet}
-    </Avatar.Root>
+  <div class="fixed top-0 left-0 z-20 hidden w-fit @[75rem]/parent:block">
+    <Settings />
   </div>
-
-  <div class="relative h-full w-full flex-1 overflow-y-auto @[75rem]/parent:ml-[30vw] @[75rem]/parent:w-[calc(100%-30vw)]">
-    <main data-vaul-drawer-wrapper class="@container relative mx-auto">
-      {#if getProfileContext().current}
-        <Navbar>
-          <Sections />
-        </Navbar>
-      {/if}
-    </main>
+  <div class="flex h-dvh w-full">
+    <div class="@container relative hidden h-full w-[30vw] shrink-0 @[75rem]/parent:block">
+      <Avatar.Root class="flex size-full items-center justify-center">
+        {#snippet child({ props })}
+          <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
+            <Avatar.Image loading="lazy" src="https://nmsr.nickac.dev/fullbody/{profile.uuid}?no=shadow" alt="{profile.username}'s avatar" class="max-h-128 object-cover" />
+            <Avatar.Fallback>
+              <Image class="size-24 object-cover text-text" />
+            </Avatar.Fallback>
+          </div>
+        {/snippet}
+      </Avatar.Root>
+    </div>
+    <div class="relative h-full w-full flex-1 overflow-y-auto @[75rem]/parent:w-[calc(100%-30vw)]">
+      <main data-vaul-drawer-wrapper class="@container relative mx-auto">
+        {#if getProfileContext().current}
+          <Navbar>
+            <Sections />
+          </Navbar>
+        {/if}
+      </main>
+    </div>
   </div>
 </div>
 
