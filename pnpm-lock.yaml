@@ -17,6 +17,9 @@ importers:
       simple-git-hooks:
         specifier: ^2.13.1
         version: 2.13.1
+      svelte-interactions:
+        specifier: ^0.2.0
+        version: 0.2.0(svelte@5.54.0)
     devDependencies:
       '@changesets/cli':
         specifier: ^2.30.0
@@ -3981,6 +3984,11 @@ packages:
     peerDependenciesMeta:
       svelte:
         optional: true
+
+  svelte-interactions@0.2.0:
+    resolution: {integrity: sha512-jGgZgdfSFnBzIs5j058T/XqHCEXHVpob31dkTwMu4KZyUSt2prozXoK/vKmN1eOyTaEIqALX20aLkYlbbapLPA==}
+    peerDependencies:
+      svelte: ^4.0.0
 
   svelte-persisted-store@0.12.0:
     resolution: {integrity: sha512-BdBQr2SGSJ+rDWH8/aEV5GthBJDapVP0GP3fuUCA7TjYG5ctcB+O9Mj9ZC0+Jo1oJMfZUd1y9H68NFRR5MyIJA==}
@@ -8342,6 +8350,10 @@ snapshots:
       postcss-selector-parser: 7.1.1
       semver: 7.7.4
     optionalDependencies:
+      svelte: 5.54.0
+
+  svelte-interactions@0.2.0(svelte@5.54.0):
+    dependencies:
       svelte: 5.54.0
 
   svelte-persisted-store@0.12.0(svelte@5.54.0):
