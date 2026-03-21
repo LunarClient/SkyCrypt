@@ -16,12 +16,6 @@
   const profileId = $derived(profile?.profile_id);
 
   let stats = $state<RemoteQuery<ModelsStats>>();
-
-  $effect(() => {
-    if (openState) {
-      stats = getAdditionalStats({ uuid: profileUUID!, profileId: profileId! });
-    }
-  });
 </script>
 
 <div class="stats flex flex-col">
