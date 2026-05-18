@@ -2,5 +2,7 @@ allowBuilds:
   "@sentry/cli": true
   "@tailwindcss/oxide": true
   esbuild: true
+  sharp: true
   simple-git-hooks: true
   svelte-preprocess: true
+  workerd: true
