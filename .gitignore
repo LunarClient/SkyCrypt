@@ -53,6 +53,10 @@ Temporary Items
 .svelte-kit/
 package
 
+### Cloudflare / Wrangler ###
+# Local wrangler/miniflare runtime state (sqlite cache, etc.)
+.wrangler/
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json

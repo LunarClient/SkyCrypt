@@ -1,5 +1,5 @@
 import { sentrySvelteKit } from "@sentry/sveltekit";
-import adapter from "@sveltejs/adapter-node";
+import adapter from "@sveltejs/adapter-cloudflare";
 import { sveltekit } from "@sveltejs/kit/vite";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
@@ -46,7 +46,8 @@ export default defineConfig({
           "img-src": ["self", "data:", "https://textures.minecraft.net", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe", "https://nmsr.nickac.dev", "https://cms.shiiyu.moe", "http://localhost:3000"],
           "connect-src": ["self", "https://mowojang.matdoes.dev", "https://mowojang.seraph.si", "http://localhost:8080", "https://cupcake.shiiyu.moe", "https://sky.shiiyu.moe", "https://cms.shiiyu.moe", "http://localhost:3000"],
           "font-src": ["self", "https://fonts.gstatic.com"],
-          "frame-ancestors": ["self", "https://cms.shiiyu.moe", "http://localhost:3000"],
+          // frame-ancestors intentionally omitted: this fork is embedded as an iframe
+          // (skycrypt-embed.lunarclient.com), so the site must be framable.
           "frame-src": ["self"]
         }
       },

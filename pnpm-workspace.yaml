@@ -6,5 +6,7 @@ allowBuilds:
   esbuild: true
   sharp: true
   simple-git-hooks: true
+  svelte-preprocess: true
+  workerd: true
 overrides:
   kysely: 0.28.17

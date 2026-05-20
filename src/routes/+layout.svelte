@@ -2,21 +2,18 @@
   import { browser, dev } from "$app/environment";
   import { beforeNavigate, replaceState } from "$app/navigation";
   import { page, updated } from "$app/state";
-  import { initDisabledPacks, initFavorites, initInternalState, initNewsroomNotifications, initPreferences, initRecentSearches, initTheme, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
-  import Header from "$lib/components/header/Header.svelte";
+  import { initDisabledPacks, initFavorites, initInternalState, initPreferences, initRecentSearches, initTheme, PacksContext, setHoverContext, setMobileContext, setPacksContext } from "$ctx";
   import { CommandPalette, JsonLd, PerformanceMode } from "$lib/components/misc";
-  import NewPostsNotifier from "$lib/components/newsroom/NewPostsNotifier.svelte";
   import ThemeEditor from "$lib/components/theme-editor/ThemeEditor.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
-  import { listLatestPostsForNotifications } from "$lib/shared/api/cms-api.remote";
   import { getPacks } from "$lib/shared/api/skycrypt-api.remote";
   import { parseThemeFromURL } from "$lib/shared/themes/sharing";
   import { cn } from "$lib/shared/utils";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { Tooltip } from "bits-ui";
-  import { onMount, type Snippet } from "svelte";
+  import { onDestroy, onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
   import { SvelteURLSearchParams } from "svelte/reactivity";
@@ -31,7 +28,6 @@
   let toastId: string | number = $state(0);
   let commandLoading = $state(false);
   const { ign } = $derived(page.params);
-  const showNewsroomToast = $derived(page.url.pathname !== "/" && !page.url.pathname.startsWith("/newsroom"));
   const preferences = initPreferences();
   const themeContext = initTheme();
   const internalState = initInternalState();
@@ -89,7 +85,6 @@
 
   initDisabledPacks();
   initFavorites();
-  initNewsroomNotifications();
   initRecentSearches();
   setMobileContext(isMobile);
   setHoverContext(isHover);
@@ -99,6 +94,10 @@
     if (window.innerWidth <= 600) {
       position.set("bottom-center");
     }
+  });
+
+  onDestroy(() => {
+    isHover.destroy();
   });
 
   beforeNavigate(({ type }) => {
@@ -228,16 +227,6 @@
   <PerformanceMode />
 {/if}
 
-<div class="pointer-events-none fixed inset-0 z-[-1] h-dvh w-screen [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat"></div>
-
-<Header />
-{#if showNewsroomToast}
-  <svelte:boundary>
-    {#snippet failed()}{/snippet}
-    {@const latestNewsroom = await listLatestPostsForNotifications({ limit: 5 })}
-    <NewPostsNotifier posts={latestNewsroom.docs} />
-  </svelte:boundary>
-{/if}
 <Tooltip.Provider delayDuration={0}>
   {@render children()}
 </Tooltip.Provider>
