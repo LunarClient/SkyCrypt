@@ -88,7 +88,10 @@
           </ScrollItems>
           <Separator orientation="horizontal" />
         {:else}
-          <div class="@container-scroll relative flex h-fit w-full md:sticky md:top-1/4 md:w-fit">
+          <!-- md:top-16 (not upstream's md:top-1/4): the embed has no header/profile block above
+               the sections, so a 25vh sticky offset displaces the tab list downward even at rest;
+               16 keeps it just below the sticky navbar. -->
+          <div class="@container-scroll relative flex h-fit w-full md:sticky md:top-16 md:w-fit">
             <Tabs.List
               class="h-fit rounded-xl bg-transparent transition-colors duration-150 @stuck-top:bg-background/50">
               <ScrollArea

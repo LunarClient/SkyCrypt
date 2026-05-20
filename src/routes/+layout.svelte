@@ -7,7 +7,6 @@
     initEnabledPacks,
     initFavorites,
     initInternalState,
-    initNewsroomNotifications,
     initPreferences,
     initRecentSearches,
     initTheme,
@@ -17,23 +16,19 @@
     setPacksContext
   } from "$ctx";
   import { env as publicEnv } from "$env/dynamic/public";
-  import Header from "$lib/components/header/Header.svelte";
   import { CommandPalette, JsonLd, PerformanceMode } from "$lib/components/misc";
-  import NewPostsNotifier from "$lib/components/newsroom/NewPostsNotifier.svelte";
   import ThemeEditor from "$lib/components/theme-editor/ThemeEditor.svelte";
   import { IsHover } from "$lib/hooks/is-hover.svelte";
   import { IsMobile } from "$lib/hooks/is-mobile.svelte";
-  import { listLatestPostsForNotifications } from "$lib/shared/api/cms-api.remote";
   import { listResourcePacks } from "$lib/shared/api/skycrypt-api.remote";
   import { parseThemeFromURL } from "$lib/shared/themes/sharing";
   import * as Drawer from "$ui/drawer";
-  import { Separator } from "$ui/separator";
   import * as Sheet from "$ui/sheet";
   import Wifi from "@lucide/svelte/icons/wifi";
   import WifiOff from "@lucide/svelte/icons/wifi-off";
   import { Tooltip } from "bits-ui";
   import { mode, ModeWatcher, setMode } from "mode-watcher";
-  import { onMount, type Snippet } from "svelte";
+  import { onDestroy, onMount, type Snippet } from "svelte";
   import SvelteSeo from "svelte-seo";
   import { toast, Toaster, type ToasterProps } from "svelte-sonner";
   import "./layout.css";
@@ -54,7 +49,6 @@
     PUBLIC_UMAMI_HOST_URL
   } = publicEnv;
   const { ign } = $derived(page.params);
-  const showNewsroomToast = $derived(page.url.pathname !== "/" && !page.url.pathname.startsWith("/newsroom"));
   const preferences = initPreferences();
   const enabledPacks = initEnabledPacks();
   const themeContext = initTheme();
@@ -139,7 +133,6 @@
   }
 
   initFavorites();
-  initNewsroomNotifications();
   initRecentSearches();
   setMobileContext(isMobile);
   setHoverContext(isHover);
@@ -150,15 +143,13 @@
       position.set("bottom-center");
     }
 
-    if (preferences.performanceModeForced) {
-      toast.warning("Performance Mode Locked", {
-        id: "performance-mode-locked",
-        description:
-          "SkyCrypt could not access hardware graphics acceleration, so Performance Mode has been locked on. Enable graphics acceleration in your browser settings and reload SkyCrypt to restore Standard Mode.",
-        duration: 10000,
-        closeButton: false
-      });
-    }
+    // Upstream shows a "Performance Mode Locked" toast here when performanceModeForced is set.
+    // Intentionally omitted: the embed always runs in performance mode (the GameUI browser has
+    // no hardware acceleration), so the warning is noise for every user.
+  });
+
+  onDestroy(() => {
+    isHover.destroy();
   });
 
   beforeNavigate(({ type }) => {
@@ -315,33 +306,6 @@
   <PerformanceMode />
 {/if}
 
-<div
-  class="group pointer-events-none fixed inset-0 isolate z-[-1] h-dvh w-screen"
-  data-isSkinHidden={innerWidth < 1210}
-  data-isStatsPage={page.url.pathname.startsWith("/stats") && !page.error}>
-  <div
-    class="relative z-10 size-full bg-background [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat group-data-[isSkinHidden=true]:group-data-[isStatsPage=true]:blur-lg">
-  </div>
-
-  <div
-    class="absolute inset-0 z-20 size-full [background-image:var(--bg-url)] bg-cover bg-scroll bg-center bg-no-repeat blur-lg group-data-[isStatsPage=false]:hidden group-data-[skinHidden=true]:hidden"
-    style="--percent: 30%; clip-path: polygon(var(--percent) 0%, 100% 0%, 100% 100%, var(--percent) 100%);">
-  </div>
-  <Separator
-    class="absolute inset-0 top-12 left-[calc(30%-1px)] z-50 h-screen group-data-[isSkinHidden=true]:hidden group-data-[isStatsPage=false]:hidden"
-    orientation="vertical" />
-</div>
-
-<Header />
-{#if showNewsroomToast}
-  <svelte:boundary>
-    {#snippet failed()}{/snippet}
-    {const latestNewsroom = await listLatestPostsForNotifications({ limit: 5 })}
-    {#if latestNewsroom}
-      <NewPostsNotifier posts={latestNewsroom.docs} />
-    {/if}
-  </svelte:boundary>
-{/if}
 <Tooltip.Provider delayDuration={0}>
   {@render children()}
 </Tooltip.Provider>

@@ -11,17 +11,15 @@ import {
   getSelectedProfileStats
 } from "$src/lib/shared/api/skycrypt-api.remote";
 import { render } from "svelte/server";
-import { Renderer, type Font, type ImageSource } from "takumi-js/node";
+import type { Font, ImageSource } from "takumi-js";
 import { ImageResponse } from "takumi-js/response";
 import type { RequestHandler } from "./$types";
 import appStyles from "$routes/layout.css?inline";
 
 const { PUBLIC_ORIGIN: baseUrl } = env;
 
-// Create shared renderer with 64MB cache budget
-const renderer = new Renderer({ cacheMaxBytes: 64 * 1024 * 1024 });
-
-// Initialize assets once and pre-register fonts onto the renderer
+// No shared takumi Renderer here: `takumi-js/node` relies on a native binary
+// that cannot run on Cloudflare Workers, so fonts are passed per response.
 const assetsPromise = setupAssetsAndRenderer();
 
 export const GET: RequestHandler = async ({ params, request, url }) => {
@@ -30,7 +28,7 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
   const settings = parseSettingsFromParams(url.searchParams);
 
   // Await shared assets
-  const { images } = await assetsPromise;
+  const { fonts, images } = await assetsPromise;
 
   const isSameOrigin = request.headers.get("sec-fetch-site") === "same-origin";
   const cacheControl = dev || isSameOrigin ? "no-cache, no-store, must-revalidate" : "public, max-age=86400, immutable";
@@ -73,7 +71,7 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
       emoji: "twemoji",
       signal: request.signal,
       images,
-      renderer
+      fonts
     });
 
     await imageResponse.ready;
@@ -113,7 +111,7 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
         stylesheets: [appStyles],
         emoji: "twemoji",
         images,
-        renderer
+        fonts
       });
 
       await errorResponse.ready;
@@ -213,11 +211,6 @@ async function setupAssetsAndRenderer() {
       { src: "skycrypt-logo", data: skycryptLogo },
       { src: "skycrypt-background", data: skycryptBackground }
     ];
-
-    // Register fonts once on startup
-    for (const font of fonts) {
-      await renderer.registerFont(font);
-    }
 
     return { fonts, images };
   } catch (err) {

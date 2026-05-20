@@ -45,6 +45,7 @@
     "@takumi-rs/core-linux-x64-gnu": "^2.10.0",
     "culori": "^4.0.2",
     "simple-git-hooks": "^2.13.1",
+    "svelte-interactions": "^0.2.0",
     "takumi-js": "^2.10.0"
   },
   "devDependencies": {
@@ -67,6 +68,7 @@
     "@oslojs/encoding": "^1.1.0",
     "@playwright/test": "^1.62.1",
     "@selemondev/svgl-svelte": "^2.17.0",
+    "@sveltejs/adapter-cloudflare": "^7.2.8",
     "@sveltejs/adapter-node": "^5.5.7",
     "@sveltejs/kit": "^2.70.3",
     "@sveltejs/load-config": "^0.2.3",

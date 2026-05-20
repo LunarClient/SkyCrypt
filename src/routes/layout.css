@@ -706,3 +706,11 @@
     }
   }
 }
+
+body {
+  /* Transparent (upstream's base layer applies bg-background): the Lunar Client GameUI
+     surface must show through the embed instead of an opaque page background. */
+  background-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}

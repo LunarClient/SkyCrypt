@@ -1,0 +1,44 @@
+{
+  "name": "skycrypt-embed-lunarclient-com",
+  "main": ".svelte-kit/cloudflare/_worker.js",
+  "compatibility_date": "2026-01-27",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".svelte-kit/cloudflare"
+  },
+  "routes": [
+    {
+      "pattern": "skycrypt-embed.lunarclient.com",
+      "custom_domain": true
+    }
+  ],
+  // Persist observability in Cloudflare and forward invocations to the central Tail Worker.
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "destinations": [],
+      "head_sampling_rate": 1.0,
+      "invocation_logs": true,
+      "persist": true
+    },
+    "traces": {
+      "enabled": true,
+      "destinations": [],
+      "head_sampling_rate": 0.01,
+      "persist": true
+    }
+  },
+  "tail_consumers": [
+    {
+      "service": "moonsworth-workers-observability"
+    }
+  ],
+  "vars": {
+    "PUBLIC_SERVER_API_URL": "https://sky.shiiyu.moe/api/",
+    "PUBLIC_API_URL": "https://sky.shiiyu.moe/api/"
+  }
+}

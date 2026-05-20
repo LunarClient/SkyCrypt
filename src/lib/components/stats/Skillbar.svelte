@@ -6,6 +6,7 @@
   import { cn } from "$utils";
   import BarChartHorizontal from "@lucide/svelte/icons/bar-chart-horizontal";
   import { format } from "numerable";
+  import { createHover } from "svelte-interactions";
   import { cubicInOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
 
@@ -18,9 +19,9 @@
 
   let { skill, skillData, apiEnabled = true, class: className }: Props = $props();
 
+  const { hoverAction, isHovered } = createHover();
   const isMaxed = $derived(skillData.maxed);
   const tween = new Tween(100, { duration: 1000, easing: cubicInOut });
-  let isHovered = $state(false);
 
   const skillbarProgress = $derived(
     100 -
@@ -42,8 +43,7 @@
   )}
   data-maxed={isMaxed}
   data-api={apiEnabled}
-  onpointerenter={() => (isHovered = true)}
-  onpointerleave={() => (isHovered = false)}
+  use:hoverAction
   role="none">
   <div
     class={cn(
@@ -72,13 +72,13 @@
     </div>
     {#if apiEnabled}
       <div class="text-xs font-semibold shadow-background/50 text-shadow-md">
-        {#if isHovered && !isMaxed}
+        {#if $isHovered && !isMaxed}
           {format(skillData.xpCurrent, "0,0")} / {format(skillData.xpForNext)}
         {:else if !isMaxed}
           {formatNumber(skillData.xpCurrent ?? 0)} / {formatNumber(skillData.xpForNext ?? 0)}
         {/if}
 
-        {#if isHovered && isMaxed}
+        {#if $isHovered && isMaxed}
           {format(skillData.xpCurrent, "0,0")}
         {:else if isMaxed}
           {formatNumber(skillData.xpCurrent ?? 0)}

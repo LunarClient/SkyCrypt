@@ -1,7 +1,6 @@
 <script lang="ts">
   import { getHoverContext, getInternalState } from "$ctx";
   import Misc from "$lib/components/header/settings/Misc.svelte";
-  import Order from "$lib/components/header/settings/Order.svelte";
   import Packs from "$lib/components/header/settings/Packs.svelte";
   import Themes from "$lib/components/header/settings/Themes.svelte";
   import { SettingsTab } from "$lib/components/header/types";
@@ -11,7 +10,6 @@
   import * as Tabs from "$ui/tabs";
   import { type Icon as IconType } from "@lucide/svelte";
   import Cog from "@lucide/svelte/icons/cog";
-  import ListOrdered from "@lucide/svelte/icons/list-ordered";
   import PackageOpen from "@lucide/svelte/icons/package-open";
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
   import Settings from "@lucide/svelte/icons/settings";
@@ -35,10 +33,6 @@
     {
       value: SettingsTab.Themes,
       icon: PaintBucket
-    },
-    {
-      value: SettingsTab.Order,
-      icon: ListOrdered
     },
     {
       value: SettingsTab.Misc,
@@ -74,7 +68,6 @@
     </Tabs.List>
     <Packs />
     <Themes />
-    <Order />
     <Misc />
   </Tabs.Root>
 {/snippet}

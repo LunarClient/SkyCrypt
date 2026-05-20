@@ -1,25 +1,14 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import { getFavorites, getHoverContext, getProfileContext } from "$ctx";
+  import { getHoverContext, getProfileContext } from "$ctx";
   import { APINotice } from "$lib/components/notices";
   import { cn } from "$lib/shared/utils";
-  import CardBuilder from "$src/lib/components/stats/CardBuilder.svelte";
   import * as Avatar from "$ui/avatar";
-  import { Button } from "$ui/button";
   import * as Item from "$ui/item";
   import * as Popover from "$ui/popover";
   import Ban from "@lucide/svelte/icons/ban";
-  import ChevronRight from "@lucide/svelte/icons/chevron-right";
-  import ExternalLink from "@lucide/svelte/icons/external-link";
-  import Heart from "@lucide/svelte/icons/heart";
-  import HeartMinus from "@lucide/svelte/icons/heart-minus";
-  import HeartPlus from "@lucide/svelte/icons/heart-plus";
-  import Link from "@lucide/svelte/icons/link";
   import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
-  import { toast } from "svelte-sonner";
 
-  let toastId: string | number = $state(0);
-  let showMore = $state(false);
   let noticeOpen = $state(false);
   let ignOpen = $state(false);
   let profileOpen = $state(false);
@@ -29,31 +18,14 @@
 
   const profile = $derived(getProfileContext().current);
   const isHover = getHoverContext();
-  const favorites = getFavorites();
 
   const apiSettings = $derived(Object.entries(profile?.apiSettings ?? {}).filter(([_, value]) => !value));
-
-  const iconMapper: Record<string, string> = {
-    TWITTER: "x-twitter.svg",
-    YOUTUBE: "youtube.svg",
-    INSTAGRAM: "instagram.svg",
-    TIKTOK: "tiktok.svg",
-    TWITCH: "twitch.svg",
-    DISCORD: "discord.svg",
-    HYPIXEL: "hypixel.avif"
-  };
 
   const emojiMapper: Record<string, string> = {
     bingo: "🎲",
     ironman: "♻️",
     island: "🌴"
   };
-
-  function copyToClipboard(value: string) {
-    navigator.clipboard.writeText(value);
-    toast.dismiss(toastId);
-    toastId = toast.success(`Copied ${value} to your clipboard!`);
-  }
 </script>
 
 <div
@@ -224,110 +196,4 @@
       </Popover.Root>
     {/if}
   </div>
-</div>
-<div
-  class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-2 *:motion-preset-focus *:motion-preset-slide-right *:motion-delay-[calc(sibling-index()*0.1s)]">
-  <Button
-    class="text-base font-semibold"
-    onclick={() => {
-      if (profile == null) return;
-      if (!favorites.current.some((fav) => fav.uuid === profile.uuid)) {
-        favorites.current = [
-          ...favorites.current,
-          { uuid: profile.uuid ?? "", ign: profile.username ?? "", displayName: profile.displayName ?? undefined }
-        ];
-        toast.dismiss(toastId);
-        toastId = toast.success(`Added ${profile.username} to your favorites!`, {
-          position: "top-center",
-          icon: HeartPlus
-        });
-      } else {
-        favorites.current = favorites.current.filter((fav) => fav.uuid !== profile.uuid);
-        toast.dismiss(toastId);
-        toastId = toast.success(`Removed ${profile.username} from your favorites!`, {
-          position: "top-center",
-          icon: HeartMinus
-        });
-      }
-    }}>
-    {#if favorites.current.some((fav) => fav.uuid === profile?.uuid)}
-      <Heart class="size-4 fill-red-500 stroke-red-300" />
-    {:else}
-      <Heart class="size-4" />
-    {/if}
-  </Button>
-
-  <Button
-    onclick={() => {
-      copyToClipboard(window.location.href);
-    }}>
-    <Link class="size-4" />
-  </Button>
-
-  <CardBuilder />
-
-  <Button
-    href={`https://plancke.io/hypixel/player/stats/${profile?.username}?utm_source=SkyCrypt&utm_campaign=Nav`}
-    target="_blank"
-    class="text-base font-semibold">
-    Plancke <ExternalLink class="size-4" />
-  </Button>
-
-  <Button
-    href={`https://eliteskyblock.com/@${profile?.username}/${profile?.profile_cute_name}?utm_source=SkyCrypt&utm_campaign=Nav`}
-    target="_blank"
-    class="text-base font-semibold">
-    Elite <ExternalLink class="size-4" />
-  </Button>
-
-  <Button
-    class="motion-preset-focus motion-preset-slide-right transition-opacity duration-150 ease-out motion-delay-[0.4s]"
-    onclick={() => (showMore = !showMore)}>
-    <ChevronRight class="size-4 transition-[rotate] duration-300 data-[show=true]:-rotate-180" data-show={showMore} />
-  </Button>
-
-  {#if showMore}
-    <Button
-      class="text-base font-semibold"
-      style="animation-delay: 0s"
-      onclick={() => {
-        copyToClipboard(profile?.uuid ?? "");
-      }}>
-      Copy UUID
-    </Button>
-
-    <Button
-      class="text-base font-semibold"
-      style="animation-delay: 0.1s"
-      onclick={() => {
-        copyToClipboard(profile?.profile_id ?? "");
-      }}>
-      Copy Profile UUID
-    </Button>
-
-    {#if profile?.social}
-      {#each Object.entries(profile.social) as [key, value], index (index)}
-        <Button
-          href={key === "DISCORD" ? undefined : value + "?utm_source=SkyCrypt&utm_campaign=Nav"}
-          target="_blank"
-          style={`animation-delay: ${(index + 2) * 0.1}s`}
-          onclick={key === "DISCORD" ? () => copyToClipboard(value) : undefined}
-          class="text-base font-semibold">
-          <Avatar.Root class="size-4 rounded-none after:border-none">
-            <Avatar.Image
-              loading="lazy"
-              src="/img/icons/{iconMapper[key]}"
-              alt="{profile.username}'s {key.toLocaleLowerCase()}"
-              class="size-4 rounded-none text-white" />
-            <Avatar.Fallback>
-              {profile.username?.slice(0, 2)}
-            </Avatar.Fallback>
-          </Avatar.Root>
-          {#if key === "DISCORD"}
-            {value}
-          {/if}
-        </Button>
-      {/each}
-    {/if}
-  {/if}
 </div>

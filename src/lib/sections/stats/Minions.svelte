@@ -6,10 +6,7 @@
   import { calculatePercentage } from "$lib/shared/helper";
   import { cn } from "$lib/shared/utils";
   import EmptyStat from "$src/lib/components/EmptyStat.svelte";
-  import * as Avatar from "$ui/avatar";
-  import * as Item from "$ui/item";
   import BotIcon from "@lucide/svelte/icons/bot";
-  import ExternalLinkIcon from "@lucide/svelte/icons/external-link";
 
   let { order }: { order: number } = $props();
 
@@ -32,27 +29,6 @@
 
 <Section id="Minions" {order}>
   <div class="contents space-y-4">
-    <Item.Root
-      variant="outline"
-      class="hover:interact-95 mx-auto w-fit rounded-full duration-150 ease-out [a]:transition-[scale,background-color] [a]:hover:bg-foreground/10">
-      {#snippet child({ props })}
-        <a href="https://minionah.com/" target="_blank" {...props}>
-          <Item.Media>
-            <Avatar.Root class="after:rounded-none after:border-none">
-              <Avatar.Image src="/img/icons/minionah.avif" alt="MinionAH" class="rounded-none" />
-              <Avatar.Fallback class="border bg-transparent">MI</Avatar.Fallback>
-            </Avatar.Root>
-          </Item.Media>
-          <Item.Content>
-            <Item.Title class="gap-1"
-              >Looking for a place to trade minions? Check out <span
-                class="inline-flex flex-nowrap items-start gap-0.5 text-primary underline"
-                >MinionAH <ExternalLinkIcon class="size-3" /></span
-              ></Item.Title>
-          </Item.Content>
-        </a>
-      {/snippet}
-    </Item.Root>
     {#if minions}
       <div class="rounded-xl border p-4">
         <div class="space-y-0.5">

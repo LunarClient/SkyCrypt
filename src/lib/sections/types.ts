@@ -1,6 +1,7 @@
 import type { Component } from "svelte";
 
 export type SectionName =
+  | "Overview"
   | "Gear"
   | "Accessories"
   | "Pets"

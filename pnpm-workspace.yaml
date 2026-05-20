@@ -6,6 +6,8 @@ allowBuilds:
   esbuild: true
   sharp: true
   simple-git-hooks: true
+  svelte-preprocess: true
+  workerd: true
 
 updateConfig:
   ignoreDependencies:

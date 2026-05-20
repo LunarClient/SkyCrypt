@@ -9,9 +9,22 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="apple-touch-icon" sizes="180x180" href="/img/app-icons/square-180.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="/img/app-icons/square-512.png" />
+    <!-- Compat shim for the Lunar Client GameUI browser (Ultralight/WebKit), which has no media
+         element support: Svelte's runtime evaluates `instanceof HTMLMediaElement` when attaching
+         event listeners, which throws "Can't find variable: HTMLMediaElement" there. Define inert
+         stand-ins so those checks evaluate to false instead of crashing. -->
+    <script>
+      if (typeof HTMLMediaElement === "undefined") {
+        window.HTMLMediaElement = function HTMLMediaElement() {};
+        if (typeof HTMLAudioElement === "undefined") window.HTMLAudioElement = function HTMLAudioElement() {};
+        if (typeof HTMLVideoElement === "undefined") window.HTMLVideoElement = function HTMLVideoElement() {};
+      }
+    </script>
     %sveltekit.head%
   </head>
-  <body data-sveltekit-preload-data="hover" class="h-full overflow-x-clip bg-black">
+  <!-- No bg-black on body (upstream has it): the embed's body must stay transparent so the
+       Lunar Client GameUI surface shows through instead of an opaque black layer. -->
+  <body data-sveltekit-preload-data="hover" class="h-full overflow-x-clip">
     <div class="contents">%sveltekit.body%</div>
   </body>
 </html>

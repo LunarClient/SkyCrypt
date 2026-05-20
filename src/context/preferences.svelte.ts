@@ -18,9 +18,9 @@ interface PreferencesData {
 export class PreferencesContext {
   #data = new PersistedState<PreferencesData>("skycryptPreferences", {
     sectionOrder: sections,
-    performanceMode: false,
+    performanceMode: true,
     keybind: "/",
-    showGlint: true,
+    showGlint: false,
     rainbowEnchantments: false,
     mctooltip: false
   });
