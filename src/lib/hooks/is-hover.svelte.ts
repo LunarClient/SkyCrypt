@@ -1,11 +1,11 @@
 export class IsHover {
   #current = $state(true);
 
-  constructor() { }
+  constructor() {}
 
   get current() {
     return this.#current;
   }
 
-  destroy() { }
+  destroy() {}
 }

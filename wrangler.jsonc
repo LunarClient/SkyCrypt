@@ -11,12 +11,27 @@
   },
   "routes": [
     {
-    "pattern": "skycrypt-embed.lunarclient.com",
-    "custom_domain": true
+      "pattern": "skycrypt-embed.lunarclient.com",
+      "custom_domain": true
     }
   ],
+  // Exported to Better Stack via the OTLP destinations configured in the
+  // Cloudflare dashboard (Workers & Pages -> Observability -> Telemetry).
+  // persist: true also retains everything in the CF dashboard.
   "observability": {
-    "enabled": true
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "destinations": ["betterstack-logs"],
+      "head_sampling_rate": 1.0,
+      "persist": true
+    },
+    "traces": {
+      "enabled": true,
+      "destinations": ["betterstack-traces"],
+      "head_sampling_rate": 0.01,
+      "persist": true
+    }
   },
   "vars": {
     "PUBLIC_SERVER_API_URL": "https://sky.shiiyu.moe/api/",
