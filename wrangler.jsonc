@@ -29,7 +29,7 @@
     "traces": {
       "enabled": true,
       "destinations": ["betterstack-traces"],
-      "head_sampling_rate": 0.01,
+      "head_sampling_rate": 1.0,
       "persist": true
     }
   },
