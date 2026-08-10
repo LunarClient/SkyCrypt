@@ -11,8 +11,8 @@
   },
   "routes": [
     {
-    "pattern": "skycrypt-embed.lunarclient.com",
-    "custom_domain": true
+      "pattern": "skycrypt-embed.lunarclient.com",
+      "custom_domain": true
     }
   ],
   // Exported to Better Stack via the OTLP destinations configured in the
