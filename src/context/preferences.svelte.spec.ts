@@ -28,9 +28,9 @@ describe("PreferencesContext Tests", () => {
 
         untrack(() => {
           expect(prefs.sectionOrder).toHaveLength(sections.length);
-          expect(prefs.performanceMode).toBe(false);
+          expect(prefs.performanceMode).toBe(true);
           expect(prefs.keybind).toBe("/");
-          expect(prefs.showGlint).toBe(true);
+          expect(prefs.showGlint).toBe(false);
           expect(prefs.rainbowEnchantments).toBe(false);
           expect(prefs.mctooltip).toBe(false);
         });
@@ -300,12 +300,12 @@ describe("PreferencesContext Tests", () => {
 
         untrack(() => {
           const before = prefs.performanceMode;
-          prefs.performanceMode = true;
+          prefs.performanceMode = false;
           flushSync();
           const after = prefs.performanceMode;
 
-          expect(before).toBe(false);
-          expect(after).toBe(true);
+          expect(before).toBe(true);
+          expect(after).toBe(false);
         });
       });
 
@@ -336,12 +336,12 @@ describe("PreferencesContext Tests", () => {
 
         untrack(() => {
           const before = prefs.showGlint;
-          prefs.showGlint = false;
+          prefs.showGlint = true;
           flushSync();
           const after = prefs.showGlint;
 
-          expect(before).toBe(true);
-          expect(after).toBe(false);
+          expect(before).toBe(false);
+          expect(after).toBe(true);
         });
       });
 
@@ -470,15 +470,15 @@ describe("PreferencesContext Tests", () => {
   });
 
   describe("performanceMode document.dataset", () => {
-    it("sets document.documentElement.dataset.performance to 'false' by default", ({ expect }) => {
+    it("sets document.documentElement.dataset.performance to 'true' by default", ({ expect }) => {
       const cleanup = $effect.root(() => {
         const prefs = new PreferencesContext();
 
         untrack(() => {
           flushSync();
 
-          expect(prefs.performanceMode).toBe(false);
-          expect(document.documentElement.dataset.performance).toBe("false");
+          expect(prefs.performanceMode).toBe(true);
+          expect(document.documentElement.dataset.performance).toBe("true");
         });
       });
 
@@ -744,9 +744,9 @@ describe("PreferencesContext Tests", () => {
 
         untrack(() => {
           flushSync();
-          expect(prefs.performanceMode).toBe(false);
+          expect(prefs.performanceMode).toBe(true);
           expect(prefs.keybind).toBe("/");
-          expect(prefs.showGlint).toBe(true);
+          expect(prefs.showGlint).toBe(false);
           expect(prefs.rainbowEnchantments).toBe(false);
         });
       });
@@ -791,7 +791,7 @@ describe("PreferencesContext Tests", () => {
 
           expect(prefs.performanceMode).toBe(true);
           expect(prefs.keybind).toBe("custom");
-          expect(prefs.showGlint).toBe(true);
+          expect(prefs.showGlint).toBe(false);
         });
       });
 

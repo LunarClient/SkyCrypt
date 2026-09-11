@@ -6,6 +6,24 @@
 > git push origin dev --force-with-lease
 > ```
 
+## Lunar Client Workers deployment
+
+`.github/workflows/deploy-workers.yml` runs the existing lint, Svelte/TypeScript, and test checks before building and deploying this fork. `dev` selects the `cloudflare-production` GitHub environment; other branches select `cloudflare-development` and upload a preview version with a branch alias. A missing development Worker is initialized before its first preview upload.
+
+Each GitHub environment must supply the `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` secrets and the `CLOUDFLARE_ENV` variable (`production` or `development`). Restrict `cloudflare-production` to the `dev` branch. Account IDs come from those secrets, not Wrangler files. Both accounts use the Worker name `skycrypt-embed`; production owns `skycrypt-embed.lunarclient.com`, while development has no custom domain. Both environments retain the existing SkyCrypt API URLs.
+
+Before enabling this workflow, provision the GitHub environments and account credentials, configure any required runtime secrets in the destination accounts, and disable the old Workers Builds integration so it does not deploy alongside GitHub Actions. The destination production account must contain the `lunarclient.com` zone. Deployments use `--no-x-provision` and no longer bind the old shared-account observability Tail Worker.
+
+Local validation without deployment:
+
+```sh
+pnpm install --frozen-lockfile
+cp .env.example .env
+CLOUDFLARE_ENV=development PUBLIC_API_URL=https://sky.shiiyu.moe/api/ PUBLIC_SERVER_API_URL=https://sky.shiiyu.moe/api/ pnpm build
+pnpm exec wrangler deploy --dry-run --no-x-provision --env development
+pnpm exec wrangler deploy --dry-run --no-x-provision --env production
+```
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: light)" srcset="static/img/logo_black.avif">

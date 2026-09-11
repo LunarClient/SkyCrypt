@@ -1,0 +1,81 @@
+name: Deploy Workers
+
+on: [push, workflow_dispatch]
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: deploy-workers-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/dev' }}
+
+jobs:
+  checks:
+    uses: ./.github/workflows/checks.yml
+
+  deploy:
+    name: Deploy SkyCrypt
+    needs: checks
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref == 'refs/heads/dev' && 'cloudflare-production' || 'cloudflare-development' }}
+      deployment: false
+    env:
+      CLOUDFLARE_ENV: ${{ vars.CLOUDFLARE_ENV }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Require Wrangler environment
+        if: vars.CLOUDFLARE_ENV == ''
+        run: |
+          echo "::error::Set CLOUDFLARE_ENV in the selected GitHub environment."
+          exit 1
+
+      - name: Install dependencies
+        uses: ./.github/actions/pnpm-install
+
+      - name: Prepare build environment
+        run: cp .env.example .env
+
+      - name: Build
+        run: pnpm build
+        env:
+          PUBLIC_COMMIT_HASH: ${{ github.sha }}
+          PUBLIC_SERVER_API_URL: https://sky.shiiyu.moe/api/
+          PUBLIC_API_URL: https://sky.shiiyu.moe/api/
+          SERVER_API_TOKEN: ${{ secrets.SERVER_API_TOKEN }}
+
+      - name: Validate Worker bundle
+        run: pnpm exec wrangler deploy --dry-run --no-x-provision --env "$CLOUDFLARE_ENV"
+
+      - name: Get preview alias
+        id: ref
+        if: github.ref != 'refs/heads/dev'
+        run: echo "ref_name=${GITHUB_REF_NAME//[^a-zA-Z0-9-]/-}" >> "$GITHUB_OUTPUT"
+
+      - name: Initialize Preview Worker
+        if: github.ref != 'refs/heads/dev'
+        run: |
+          if pnpm exec wrangler versions list --env "$CLOUDFLARE_ENV" --json > "$RUNNER_TEMP/worker-versions.json" 2> "$RUNNER_TEMP/worker-versions-error.log"; then
+            exit 0
+          fi
+          if ! grep -Fq '[code: 10007]' "$RUNNER_TEMP/worker-versions-error.log"; then
+            cat "$RUNNER_TEMP/worker-versions-error.log" >&2
+            exit 1
+          fi
+          pnpm exec wrangler deploy --no-x-provision --env "$CLOUDFLARE_ENV"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ github.token }}
+          environment: ${{ vars.CLOUDFLARE_ENV }}
+          command: ${{ github.ref == 'refs/heads/dev' && 'deploy --no-x-provision' || format('versions upload --preview-alias {0}', steps.ref.outputs.ref_name) }}
