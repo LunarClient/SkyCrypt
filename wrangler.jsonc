@@ -33,6 +33,11 @@
   "env": {
     "production": {
       "name": "skycrypt-embed",
+      "tail_consumers": [
+        {
+          "service": "workers-observability"
+        }
+      ],
       "routes": [
         {
           "pattern": "skycrypt-embed.lunarclient.com",
@@ -46,6 +51,11 @@
     },
     "development": {
       "name": "skycrypt-embed",
+      "tail_consumers": [
+        {
+          "service": "workers-observability"
+        }
+      ],
       "routes": [],
       "vars": {
         "PUBLIC_SERVER_API_URL": "https://sky.shiiyu.moe/api/",
