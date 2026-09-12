@@ -78,4 +78,13 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           gitHubToken: ${{ github.token }}
           environment: ${{ vars.CLOUDFLARE_ENV }}
-          command: ${{ github.ref == 'refs/heads/dev' && 'deploy --no-x-provision' || format('versions upload --preview-alias {0}', steps.ref.outputs.ref_name) }}
+          command: ${{ github.ref == 'refs/heads/dev' && 'deploy --no-x-provision' || format('versions upload --preview-alias {0} --tag {1}-{2}', steps.ref.outputs.ref_name, github.run_id, github.run_attempt) }}
+
+      # Preview uploads do not apply tail consumers or observability settings.
+      - name: Deploy Preview Version
+        if: github.ref != 'refs/heads/dev'
+        run: pnpm exec wrangler versions deploy --version-tag "$VERSION_TAG@100%" --env "$CLOUDFLARE_ENV" --yes --no-x-provision
+        env:
+          VERSION_TAG: ${{ github.run_id }}-${{ github.run_attempt }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
