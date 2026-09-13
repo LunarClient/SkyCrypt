@@ -3,7 +3,6 @@ import { env as envPrivate } from "$env/dynamic/private";
 import { env as envPublic } from "$env/dynamic/public";
 
 const { PUBLIC_SERVER_API_URL } = envPublic;
-const { SERVER_API_TOKEN } = envPrivate;
 
 // NOTE: Supports cases where `content-type` is other than `json`
 const getBody = <T>(c: Response | Request): Promise<T> => {
@@ -25,50 +24,32 @@ const getUrl = (contextUrl: string): string => {
   return requestUrl.toString();
 };
 
-// NOTE: Add headers
-const getHeaders = (headers?: HeadersInit): HeadersInit => {
+// NOTE: Returns null when called outside of a request (e.g. at build time)
+const tryGetRequestEvent = () => {
   try {
-    const { request } = getRequestEvent();
-
-    // Convert the request Headers object to a plain object
-    const requestHeadersObj: Record<string, string> = {};
-    request.headers.forEach((value, key) => {
-      requestHeadersObj[key] = value;
-    });
-
-    const mergedHeaders: HeadersInit = {
-      ...requestHeadersObj,
-      ...headers,
-      "X-API-Token": SERVER_API_TOKEN
-    };
-
-    return mergedHeaders;
+    return getRequestEvent();
   } catch {
-    return {
-      ...headers,
-      "X-API-Token": SERVER_API_TOKEN
-    };
+    return null;
   }
 };
 
 export const customFetch = async <T>(url: string, options: RequestInit): Promise<T> => {
-  let fetchFunction = fetch;
-  try {
-    const event = getRequestEvent();
-    fetchFunction = event.fetch;
-  } catch {
-    // Ignore this, we just won't have access to the request for this call
-  }
+  const event = tryGetRequestEvent();
 
-  const requestUrl = getUrl(url);
-  const requestHeaders = getHeaders(options.headers);
+  // Deployed Workers get a Secrets Store binding; local dev and prerender get a plain string
+  const token = event?.platform?.env.SERVER_API_TOKEN ?? envPrivate.SERVER_API_TOKEN;
+  const serverApiToken = typeof token === "string" ? token : await token.get();
 
   const requestInit: RequestInit = {
     ...options,
-    headers: requestHeaders
+    headers: {
+      ...(event ? Object.fromEntries(event.request.headers) : {}),
+      ...options.headers,
+      "X-API-Token": serverApiToken
+    }
   };
 
-  const response = await fetchFunction(requestUrl, requestInit);
+  const response = await (event?.fetch ?? fetch)(getUrl(url), requestInit);
   const data = await getBody<T>(response);
 
   return { status: response.status, data, headers: response.headers } as T;

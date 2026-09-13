@@ -47,7 +47,14 @@
       "vars": {
         "PUBLIC_SERVER_API_URL": "https://sky.shiiyu.moe/api/",
         "PUBLIC_API_URL": "https://sky.shiiyu.moe/api/"
-      }
+      },
+      "secrets_store_secrets": [
+        {
+          "binding": "SERVER_API_TOKEN",
+          "store_id": "1a9462229b034bc78858f53bc58fb477",
+          "secret_name": "skycrypt-server-api-key"
+        }
+      ]
     },
     "development": {
       "name": "skycrypt-embed",
@@ -60,7 +67,14 @@
       "vars": {
         "PUBLIC_SERVER_API_URL": "https://sky.shiiyu.moe/api/",
         "PUBLIC_API_URL": "https://sky.shiiyu.moe/api/"
-      }
+      },
+      "secrets_store_secrets": [
+        {
+          "binding": "SERVER_API_TOKEN",
+          "store_id": "739b83a68daf486ea3ec077b812048b4",
+          "secret_name": "skycrypt-server-api-key"
+        }
+      ]
     }
   }
 }

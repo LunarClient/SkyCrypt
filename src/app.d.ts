@@ -9,7 +9,12 @@ declare global {
     // interface Error {}
     // interface PageData {}
     // interface PageState {}
-    // interface Platform {}
+    interface Platform {
+      env: {
+        /** Secrets Store binding in deployed Workers; a plain string in local dev and prerender. */
+        SERVER_API_TOKEN?: string | { get(): Promise<string> };
+      };
+    }
     namespace Superforms {
       type Message = { type: "error" | "success"; text: string };
     }
