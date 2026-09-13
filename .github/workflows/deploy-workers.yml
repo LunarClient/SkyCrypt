@@ -28,12 +28,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Require Wrangler environment
-        if: vars.CLOUDFLARE_ENV == ''
-        run: |
-          echo "::error::Set CLOUDFLARE_ENV in the selected GitHub environment."
-          exit 1
-
       - name: Install dependencies
         uses: ./.github/actions/pnpm-install
 
@@ -48,28 +42,10 @@ jobs:
           PUBLIC_API_URL: https://sky.shiiyu.moe/api/
           SERVER_API_TOKEN: ${{ secrets.SERVER_API_TOKEN }}
 
-      - name: Validate Worker bundle
-        run: pnpm exec wrangler deploy --dry-run --no-x-provision --env "$CLOUDFLARE_ENV"
-
       - name: Get preview alias
         id: ref
         if: github.ref != 'refs/heads/dev'
         run: echo "ref_name=${GITHUB_REF_NAME//[^a-zA-Z0-9-]/-}" >> "$GITHUB_OUTPUT"
-
-      - name: Initialize Preview Worker
-        if: github.ref != 'refs/heads/dev'
-        run: |
-          if pnpm exec wrangler versions list --env "$CLOUDFLARE_ENV" --json > "$RUNNER_TEMP/worker-versions.json" 2> "$RUNNER_TEMP/worker-versions-error.log"; then
-            exit 0
-          fi
-          if ! grep -Fq '[code: 10007]' "$RUNNER_TEMP/worker-versions-error.log"; then
-            cat "$RUNNER_TEMP/worker-versions-error.log" >&2
-            exit 1
-          fi
-          pnpm exec wrangler deploy --no-x-provision --env "$CLOUDFLARE_ENV"
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
@@ -78,13 +54,14 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           gitHubToken: ${{ github.token }}
           environment: ${{ vars.CLOUDFLARE_ENV }}
-          command: ${{ github.ref == 'refs/heads/dev' && 'deploy --no-x-provision' || format('versions upload --preview-alias {0} --tag {1}-{2}', steps.ref.outputs.ref_name, github.run_id, github.run_attempt) }}
+          command: deploy --no-x-provision
 
-      # Preview uploads do not apply tail consumers or observability settings.
-      - name: Deploy Preview Version
+      - name: Upload Preview
         if: github.ref != 'refs/heads/dev'
-        run: pnpm exec wrangler versions deploy --version-tag "$VERSION_TAG@100%" --env "$CLOUDFLARE_ENV" --yes --no-x-provision
-        env:
-          VERSION_TAG: ${{ github.run_id }}-${{ github.run_attempt }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ github.token }}
+          environment: ${{ vars.CLOUDFLARE_ENV }}
+          command: versions upload --preview-alias ${{ steps.ref.outputs.ref_name }} --tag ${{ github.run_id }}-${{ github.run_attempt }} --no-x-provision
