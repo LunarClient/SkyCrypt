@@ -36,9 +36,12 @@ const tryGetRequestEvent = () => {
 export const customFetch = async <T>(url: string, options: RequestInit): Promise<T> => {
   const event = tryGetRequestEvent();
 
-  // Deployed Workers get a Secrets Store binding; local dev and prerender get a plain string
-  const token = event?.platform?.env.SERVER_API_TOKEN ?? envPrivate.SERVER_API_TOKEN;
-  const serverApiToken = typeof token === "string" ? token : await token.get();
+  // Deployed Workers get a Secrets Store binding (also surfaced through $env/dynamic/private);
+  // local dev and prerender get a plain string. Prefer the dynamic env: during `vite build` the
+  // platform proxy exposes a binding whose get() fails because the secret only exists remotely.
+  const token =
+    (envPrivate.SERVER_API_TOKEN as App.Platform["env"]["SERVER_API_TOKEN"]) ?? event?.platform?.env.SERVER_API_TOKEN;
+  const serverApiToken = typeof token === "string" ? token : ((await token?.get()) ?? "");
 
   const requestInit: RequestInit = {
     ...options,
