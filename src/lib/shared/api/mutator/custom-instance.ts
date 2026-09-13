@@ -36,8 +36,9 @@ const tryGetRequestEvent = () => {
 export const customFetch = async <T>(url: string, options: RequestInit): Promise<T> => {
   const event = tryGetRequestEvent();
 
-  // Deployed Workers read the token from the Secrets Store binding; local dev falls back to `.env`
-  const serverApiToken = (await event?.platform?.env.SERVER_API_TOKEN?.get()) ?? envPrivate.SERVER_API_TOKEN;
+  // Deployed Workers get a Secrets Store binding; local dev and prerender get a plain string
+  const token = event?.platform?.env.SERVER_API_TOKEN ?? envPrivate.SERVER_API_TOKEN;
+  const serverApiToken = typeof token === "string" ? token : await token.get();
 
   const requestInit: RequestInit = {
     ...options,

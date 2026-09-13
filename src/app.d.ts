@@ -11,8 +11,8 @@ declare global {
     // interface PageState {}
     interface Platform {
       env: {
-        /** Cloudflare Secrets Store binding. Absent in local dev, where `.env` is used instead. */
-        SERVER_API_TOKEN?: { get(): Promise<string> };
+        /** Secrets Store binding in deployed Workers; a plain string in local dev and prerender. */
+        SERVER_API_TOKEN?: string | { get(): Promise<string> };
       };
     }
     namespace Superforms {
