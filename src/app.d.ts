@@ -9,7 +9,12 @@ declare global {
     // interface Error {}
     // interface PageData {}
     // interface PageState {}
-    // interface Platform {}
+    interface Platform {
+      env: {
+        /** Cloudflare Secrets Store binding. Absent in local dev, where `.env` is used instead. */
+        SERVER_API_TOKEN?: { get(): Promise<string> };
+      };
+    }
     namespace Superforms {
       type Message = { type: "error" | "success"; text: string };
     }
