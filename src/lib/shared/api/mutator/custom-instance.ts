@@ -3,7 +3,35 @@ import { env as envPrivate } from "$env/dynamic/private";
 import { env as envPublic } from "$env/dynamic/public";
 
 const { PUBLIC_SERVER_API_URL } = envPublic;
-const { SERVER_API_TOKEN } = envPrivate;
+
+// Cloudflare Secrets Store bindings expose the value through an async `get()`
+// rather than as a plain string.
+type SecretsStoreBinding = { get(): Promise<string> };
+
+let cachedServerApiToken: Promise<string> | undefined;
+
+// NOTE: Resolve the server API token from either a Secrets Store binding
+// (production/development Workers) or a plain string (local `.env`).
+const getServerApiToken = (): Promise<string> => {
+  if (cachedServerApiToken) return cachedServerApiToken;
+
+  const token: unknown = envPrivate.SERVER_API_TOKEN;
+  let resolved: Promise<string>;
+
+  if (token && typeof token === "object" && typeof (token as SecretsStoreBinding).get === "function") {
+    resolved = (token as SecretsStoreBinding).get();
+  } else {
+    resolved = Promise.resolve(typeof token === "string" ? token : "");
+  }
+
+  cachedServerApiToken = resolved.catch((error) => {
+    // Don't cache a failed lookup so the next request retries.
+    cachedServerApiToken = undefined;
+    throw error;
+  });
+
+  return cachedServerApiToken;
+};
 
 // NOTE: Supports cases where `content-type` is other than `json`
 const getBody = <T>(c: Response | Request): Promise<T> => {
@@ -26,7 +54,9 @@ const getUrl = (contextUrl: string): string => {
 };
 
 // NOTE: Add headers
-const getHeaders = (headers?: HeadersInit): HeadersInit => {
+const getHeaders = async (headers?: HeadersInit): Promise<HeadersInit> => {
+  const serverApiToken = await getServerApiToken();
+
   try {
     const { request } = getRequestEvent();
 
@@ -39,14 +69,14 @@ const getHeaders = (headers?: HeadersInit): HeadersInit => {
     const mergedHeaders: HeadersInit = {
       ...requestHeadersObj,
       ...headers,
-      "X-API-Token": SERVER_API_TOKEN
+      "X-API-Token": serverApiToken
     };
 
     return mergedHeaders;
   } catch {
     return {
       ...headers,
-      "X-API-Token": SERVER_API_TOKEN
+      "X-API-Token": serverApiToken
     };
   }
 };
@@ -61,7 +91,7 @@ export const customFetch = async <T>(url: string, options: RequestInit): Promise
   }
 
   const requestUrl = getUrl(url);
-  const requestHeaders = getHeaders(options.headers);
+  const requestHeaders = await getHeaders(options.headers);
 
   const requestInit: RequestInit = {
     ...options,
