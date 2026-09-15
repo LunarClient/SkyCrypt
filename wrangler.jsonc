@@ -31,6 +31,7 @@
   },
   "env": {
     "production": {
+      "name": "skycrypt-embed",
       "tail_consumers": [
         {
           "service": "workers-observability"
@@ -55,6 +56,7 @@
       ]
     },
     "development": {
+      "name": "skycrypt-embed",
       "tail_consumers": [
         {
           "service": "workers-observability"
