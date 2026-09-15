@@ -2,14 +2,15 @@
   "name": "skycrypt-embed",
   "main": ".svelte-kit/cloudflare/_worker.js",
   "compatibility_date": "2026-01-27",
-  "compatibility_flags": ["nodejs_compat"],
-  "workers_dev": true,
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": false,
   "preview_urls": true,
   "assets": {
     "binding": "ASSETS",
     "directory": ".svelte-kit/cloudflare"
   },
-  // Persist observability in the selected Cloudflare account.
   "observability": {
     "enabled": true,
     "logs": {
@@ -32,7 +33,6 @@
   },
   "env": {
     "production": {
-      "name": "skycrypt-embed",
       "tail_consumers": [
         {
           "service": "workers-observability"
@@ -57,7 +57,6 @@
       ]
     },
     "development": {
-      "name": "skycrypt-embed",
       "tail_consumers": [
         {
           "service": "workers-observability"
