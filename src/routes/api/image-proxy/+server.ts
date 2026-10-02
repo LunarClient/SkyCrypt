@@ -1,3 +1,4 @@
+import { USER_AGENT } from "$lib/shared/constants/user-agent";
 import type { RequestHandler } from "./$types";
 
 // An internal endpoint used to proxy images for security/privacy reasons.
@@ -49,7 +50,7 @@ export const GET: RequestHandler = async ({ request }) => {
         signal: controller.signal,
         headers: {
           // 4. Custom User-Agent
-          "User-Agent": "SkyCrypt-Image-Proxy/1.0"
+          "User-Agent": USER_AGENT
         }
       });
       clearTimeout(timeoutId);

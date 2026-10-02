@@ -1,6 +1,8 @@
 import { getRequestEvent } from "$app/server";
 import { env as envPrivate } from "$env/dynamic/private";
 import { env as envPublic } from "$env/dynamic/public";
+import { proxyApiAssetUrls } from "$lib/shared/api/texture-proxy";
+import { USER_AGENT } from "$lib/shared/constants/user-agent";
 import { readApiResponse } from "./readApiResponse";
 
 const { PUBLIC_SERVER_API_URL } = envPublic;
@@ -54,13 +56,14 @@ export const customFetch = async <T>(url: string, options: RequestInit): Promise
     headers: {
       ...Object.fromEntries(headers),
       "X-API-Token": serverApiToken,
-      "User-Agent": "Lunar Client (skycrypt-embed.lunarclient.com)"
+      "User-Agent": USER_AGENT
     }
   };
 
   const requestUrl = getUrl(url);
   const response = await (event?.fetch ?? fetch)(requestUrl, requestInit);
-  const data = await readApiResponse(response, requestUrl, requestInit.method);
+  // Asset URLs go through our texture proxy so the browser never fetches them from the API directly.
+  const data = proxyApiAssetUrls(await readApiResponse(response, requestUrl, requestInit.method));
 
   return { status: response.status, data, headers: response.headers } as T;
 };

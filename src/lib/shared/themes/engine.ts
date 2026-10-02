@@ -53,8 +53,6 @@ function themeImageUrl(url: string): string {
     if (targetUrl.pathname.startsWith(REMOVED_FIRST_PARTY_THEME_IMAGE_PREFIX)) {
       return "url(/img/bg.avif)";
     }
-
-    return `url(${targetUrl.href})`;
   }
 
   return `url(/api/image-proxy?url=${encodeURIComponent(url)})`;

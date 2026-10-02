@@ -10,6 +10,8 @@ import {
   getProfileStats,
   getSelectedProfileStats
 } from "$src/lib/shared/api/skycrypt-api.remote";
+import { unproxyApiAssetUrls } from "$src/lib/shared/api/texture-proxy";
+import { USER_AGENT } from "$src/lib/shared/constants/user-agent";
 import { render } from "svelte/server";
 import type { Font, ImageSource } from "takumi-js";
 import { ImageResponse } from "takumi-js/response";
@@ -48,7 +50,8 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
         settings
       }
     });
-    const html = `${head}${body}`;
+    // takumi has no page origin to resolve proxied texture paths against; it fetches them itself.
+    const html = unproxyApiAssetUrls(`${head}${body}`);
     const componentRenderDuration = performance.now() - componentRenderStart;
 
     // Diagnostic: Extract and log all dynamic image sources present in the HTML template
@@ -70,7 +73,7 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
       stylesheets: [appStyles],
       emoji: "twemoji",
       signal: request.signal,
-      images,
+      images: { sources: images, fetch: fetchWithUserAgent },
       fonts
     });
 
@@ -110,7 +113,7 @@ export const GET: RequestHandler = async ({ params, request, url }) => {
         },
         stylesheets: [appStyles],
         emoji: "twemoji",
-        images,
+        images: { sources: images, fetch: fetchWithUserAgent },
         fonts
       });
 
@@ -162,9 +165,16 @@ async function fetchSelectedProfileCardData(uuid: string) {
   };
 }
 
+/** Fetches with the embed User-Agent; also used by takumi for remote <img> sources in the card. */
+function fetchWithUserAgent(input: string, init?: RequestInit): Promise<Response> {
+  const headers = new Headers(init?.headers);
+  headers.set("User-Agent", USER_AGENT);
+  return fetch(input, { ...init, headers });
+}
+
 /** Validates external asset buffers, checks HTTP status, and verifies that responses aren't HTML error/redirect pages. */
 async function fetchAssetBuffer(url: string, assetName: string): Promise<ArrayBuffer> {
-  const res = await fetch(url);
+  const res = await fetchWithUserAgent(url);
   if (!res.ok) {
     throw new Error(`[Asset Fetch Failed] ${assetName} (${url}) returned HTTP ${res.status}: ${res.statusText}`);
   }

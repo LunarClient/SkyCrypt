@@ -21,7 +21,7 @@
   const profileDescription = $derived(
     isStatsPage && !isValidEmbed ? getShortDescription(embedData) : getLongDescription(embedData)
   );
-  const profileImage = $derived(`https://nmsr.nickac.dev/bust/${embedData.uuid}?y=-20`);
+  const profileImage = $derived(`https://skins.mcstats.com/bust/${embedData.uuid}?scale=2`);
   const themeColor = $derived(
     embedData.rank?.plusColor || embedData.rank?.rankColor || (mode.current === "light" ? "#dbdbdb" : "#282828")
   );
@@ -73,8 +73,8 @@
     <link
       rel="icon"
       href={isStatsPage
-        ? `https://nmsr.nickac.dev/face/${embedData.uuid}`
-        : `https://nmsr.nickac.dev/bust/${embedData.uuid}?y=-20`}
+        ? `https://skins.mcstats.com/face/${embedData.uuid}?size=512`
+        : `https://skins.mcstats.com/bust/${embedData.uuid}?scale=2`}
       sizes="32x32"
       type="image/png" />
   {/if}

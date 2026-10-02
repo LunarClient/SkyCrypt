@@ -83,13 +83,13 @@
                   <Avatar.Root class="size-8 shrink-0 after:border-none">
                     <Avatar.Image
                       loading="lazy"
-                      src="https://nmsr.nickac.dev/face/{member.uuid}"
+                      src="https://skins.mcstats.com/face/{member.uuid}?size=512"
                       alt={member.username}
                       class="aspect-square size-8 rounded-none [image-rendering:pixelated] group-data-[removed=true]:grayscale-100" />
                     <Avatar.Fallback>
                       <img
                         loading="lazy"
-                        src="https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40"
+                        src="https://skins.mcstats.com/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40?size=512"
                         alt="Steve"
                         class="aspect-square size-8 rounded-none [image-rendering:pixelated] group-data-[removed=true]:grayscale-100" />
                     </Avatar.Fallback>

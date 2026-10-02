@@ -115,7 +115,7 @@
                   <Avatar.Root>
                     {#snippet child({ props })}
                       <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
-                        <Avatar.Image loading="lazy" src="https://nmsr.nickac.dev/fullbody/{profile.uuid}?no=shadow" alt="{profile.username}'s avatar" class="max-h-[32rem] object-cover" />
+                        <Avatar.Image loading="lazy" src="https://skins.mcstats.com/body/front/{profile.uuid}?scale=2" alt="{profile.username}'s avatar" class="max-h-[32rem] object-cover" />
                         <Avatar.Fallback>
                           <Image class="size-24 object-cover text-foreground" />
                         </Avatar.Fallback>
@@ -176,7 +176,7 @@
           <div transition:fade={{ duration: 300, easing: cubicOut }} {...props}>
             <Avatar.Image
               loading="lazy"
-              src="https://nmsr.nickac.dev/fullbody/{profile.uuid}?no=shadow"
+              src="https://skins.mcstats.com/body/front/{profile.uuid}?scale=2"
               alt="{profile.username}'s avatar"
               class="max-h-128 object-cover" />
             <Avatar.Fallback>

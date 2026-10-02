@@ -185,7 +185,7 @@ describe("Theme Engine", () => {
       expect(rule).not.toContain("/img/themes/light/bg.avif");
     });
 
-    it("uses direct URLs for non-local first-party images", ({ expect }) => {
+    it("proxies non-local first-party images", ({ expect }) => {
       const rule = ThemeEngine.themeToCssRule(
         withDarkExtras(customTheme("remote-first-party-assets"), {
           minecraft: {
@@ -197,8 +197,9 @@ describe("Theme Engine", () => {
         })
       );
 
-      expect(rule).toContain("  --bg-url: url(https://sky.shiiyu.moe/img/custom/user-bg.avif);");
-      expect(rule).not.toContain("/api/image-proxy");
+      expect(rule).toContain(
+        `  --bg-url: url(/api/image-proxy?url=${encodeURIComponent("https://sky.shiiyu.moe/img/custom/user-bg.avif")});`
+      );
     });
 
     it("omits undefined css vars", ({ expect }) => {

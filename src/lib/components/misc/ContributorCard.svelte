@@ -50,8 +50,8 @@
         <img
           loading="lazy"
           src={options?.tip
-            ? "https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40"
-            : `https://nmsr.nickac.dev/face/${user.id}`}
+            ? "https://skins.mcstats.com/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40?size=512"
+            : `https://skins.mcstats.com/face/${user.id}?size=512`}
           alt={user.username} />
       </Item.Media>
       <Item.Content>

@@ -1,6 +1,7 @@
 import { getRequestEvent } from "$app/server";
 import { env as envPrivate } from "$env/dynamic/private";
 import { env as envPublic } from "$env/dynamic/public";
+import { USER_AGENT } from "$lib/shared/constants/user-agent";
 import { error } from "@sveltejs/kit";
 
 // NOTE: Supports cases where `content-type` is other than `json`
@@ -34,7 +35,10 @@ export const cmsFetch = async <T>(url: string, options: RequestInit): Promise<T>
 
   const requestUrl = getUrl(url);
 
-  const response = await fetchFunction(requestUrl, options);
+  const headers = new Headers(options.headers);
+  headers.set("User-Agent", USER_AGENT);
+
+  const response = await fetchFunction(requestUrl, { ...options, headers });
   const data = await getBody<T>(response);
 
   return { status: response.status, data, headers: response.headers } as T;

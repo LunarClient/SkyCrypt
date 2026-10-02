@@ -1,4 +1,5 @@
 import { env } from "$env/dynamic/public";
+import { USER_AGENT } from "$lib/shared/constants/user-agent";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
@@ -26,6 +27,7 @@ export const POST: RequestHandler = async ({ request }) => {
     const upstream_sentry_url = `https://${PUBLIC_SENTRY_HOST}/api/${project_id}/envelope/`;
     await fetch(upstream_sentry_url, {
       method: "POST",
+      headers: { "User-Agent": USER_AGENT },
       body: envelopeBytes
     });
 

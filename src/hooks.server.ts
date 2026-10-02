@@ -1,5 +1,6 @@
+import { USER_AGENT } from "$lib/shared/constants/user-agent";
 import { handleErrorWithSentry, sentryHandle } from "@sentry/sveltekit";
-import { type Handle } from "@sveltejs/kit";
+import { type Handle, type HandleFetch } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
 // This fork is a public stats/card embed (skycrypt-embed.lunarclient.com) deployed
@@ -25,7 +26,7 @@ const headersHandler = (async ({ event, resolve }) => {
 
   // Cross-Origin policies
   // COEP intentionally unsafe-none: tightening would require all cross-origin
-  // resources (textures.minecraft.net, nmsr.nickac.dev, etc.) to send CORP
+  // resources (textures.minecraft.net, skins.mcstats.com, etc.) to send CORP
   // headers, which they don't control.
   response.headers.set("Cross-Origin-Embedder-Policy", "unsafe-none");
   response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
@@ -43,6 +44,13 @@ const headersHandler = (async ({ event, resolve }) => {
 
   return response;
 }) satisfies Handle;
+
+// Every server-side `event.fetch` identifies as the embed, never as the visitor's browser.
+export const handleFetch = (({ request, fetch }) => {
+  const headers = new Headers(request.headers);
+  headers.set("User-Agent", USER_AGENT);
+  return fetch(new Request(request, { headers }));
+}) satisfies HandleFetch;
 
 // If you have a custom error handler, pass it to `handleErrorWithSentry`
 export const handleError = handleErrorWithSentry();

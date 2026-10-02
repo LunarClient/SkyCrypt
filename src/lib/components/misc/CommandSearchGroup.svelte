@@ -22,8 +22,8 @@
       <Avatar.Image
         loading="lazy"
         src={item.uuid
-          ? `https://nmsr.nickac.dev/face/${item.uuid}`
-          : "https://nmsr.nickac.dev/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40"}
+          ? `https://skins.mcstats.com/face/${item.uuid}?size=512`
+          : "https://skins.mcstats.com/face/bc8ea1f51f253ff5142ca11ae45193a4ad8c3ab5e9c6eec8ba7a4fcb7bac40?size=512"}
         alt={item.ign}
         class="aspect-square size-4 [image-rendering:pixelated]" />
       <Avatar.Fallback
