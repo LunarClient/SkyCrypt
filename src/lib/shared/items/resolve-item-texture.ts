@@ -1,3 +1,4 @@
+import { USER_AGENT } from "$lib/shared/constants/user-agent";
 import { readEnabledPacksCookie, serializePackIds } from "$lib/shared/resource-packs";
 
 export type ResolvedItemTexture = {
@@ -28,7 +29,7 @@ export function resolveItemTexture(textureUrl: string, texturePack?: string): Pr
 
   const resolver = texturePack ? null : resolverUrl(textureUrl, enabledPacks);
   const resolution = resolver
-    ? fetch(resolver)
+    ? fetch(resolver, { headers: { "User-Agent": USER_AGENT } })
         .then(async (response) => {
           if (!response.ok) throw new Error(`Failed to resolve item texture: ${response.status}`);
           return (await response.json()) as ResolvedItemTexture;

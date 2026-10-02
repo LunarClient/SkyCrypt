@@ -41,7 +41,6 @@ export default defineConfig({
       },
       csrf: {
         trustedOrigins: [
-          "https://cupcake.shiiyu.moe",
           "https://sky.shiiyu.moe",
           "http://localhost:5173",
           "http://localhost:4173",
@@ -60,9 +59,7 @@ export default defineConfig({
             "data:",
             "https://textures.minecraft.net",
             "http://localhost:8080",
-            "https://cupcake.shiiyu.moe",
-            "https://sky.shiiyu.moe",
-            "https://nmsr.nickac.dev",
+            "https://skins.mcstats.com",
             "https://cms.shiiyu.moe",
             "http://localhost:3000",
             "https://eliteskyblock.com"
@@ -72,8 +69,6 @@ export default defineConfig({
             "https://mowojang.matdoes.dev",
             "https://mowojang.seraph.si",
             "http://localhost:8080",
-            "https://cupcake.shiiyu.moe",
-            "https://sky.shiiyu.moe",
             "https://cms.shiiyu.moe",
             "http://localhost:3000"
           ],

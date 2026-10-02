@@ -128,7 +128,7 @@
         {#if author.mcUuid}
           <Avatar.Image
             loading="lazy"
-            src="https://nmsr.nickac.dev/face/{author.mcUuid}"
+            src="https://skins.mcstats.com/face/{author.mcUuid}?size=512"
             alt={displayName}
             class="size-10 [image-rendering:pixelated]" />
         {/if}

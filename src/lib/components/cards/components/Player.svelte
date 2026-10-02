@@ -22,7 +22,7 @@
     </div>
   {/if}
   <img
-    src="https://nmsr.nickac.dev/fullbody/{profile?.uuid}?no=shadow"
+    src="https://skins.mcstats.com/body/front/{profile?.uuid}?scale=2"
     alt={profile?.username}
     class="relative h-full object-cover" />
 </div>

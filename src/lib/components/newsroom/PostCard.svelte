@@ -77,7 +77,7 @@
           <Avatar.Root class="size-4 shrink-0">
             <Avatar.Image
               loading="lazy"
-              src="https://nmsr.nickac.dev/face/{author.mcUuid}"
+              src="https://skins.mcstats.com/face/{author.mcUuid}?size=512"
               alt={displayName}
               class="size-full [image-rendering:pixelated]" />
             <Avatar.Fallback
