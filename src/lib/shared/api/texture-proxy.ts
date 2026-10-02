@@ -14,14 +14,33 @@ const apiOrigins = (): string[] => {
 /** The origin the proxy fetches from; the server URL may be a private hostname (e.g. Docker). */
 export const textureUpstreamOrigin = (): string => new URL(env.PUBLIC_SERVER_API_URL).origin;
 
-/** Rewrites every absolute SkyCrypt API URL inside `data` to its same-origin proxy path. */
+// The API embeds nmsr.nickac.dev player renders; serve the skins.mcstats.com equivalent instead.
+const NMSR_URL = /^https:\/\/nmsr\.nickac\.dev\/([a-z]+)\/([^/?#]+)/;
+const MCSTATS_RENDERS: Record<string, string> = {
+  face: "face/{id}?size=512",
+  headiso: "skull/{id}?scale=2",
+  bust: "bust/{id}?scale=2",
+  fullbody: "body/front/{id}?scale=2"
+};
+
+function mcstatsRenderUrl(url: string): string | null {
+  const [, mode, id] = url.match(NMSR_URL) ?? [];
+  const render = mode ? MCSTATS_RENDERS[mode] : undefined;
+  return render ? `https://skins.mcstats.com/${render.replace("{id}", id)}` : null;
+}
+
+/**
+ * Rewrites every absolute SkyCrypt API URL inside `data` to its same-origin proxy path, and nmsr.nickac.dev renders to
+ * skins.mcstats.com.
+ */
 export function proxyApiAssetUrls<T>(data: T): T {
   const prefixes = apiOrigins().map((origin) => `${origin}/`);
 
   const walk = (value: unknown): unknown => {
     if (typeof value === "string") {
       const prefix = prefixes.find((p) => value.startsWith(p));
-      return prefix ? `${TEXTURE_PROXY_PATH}/${value.slice(prefix.length)}` : value;
+      if (prefix) return `${TEXTURE_PROXY_PATH}/${value.slice(prefix.length)}`;
+      return mcstatsRenderUrl(value) ?? value;
     }
     if (Array.isArray(value)) return value.map(walk);
     // Only plain JSON objects; leave Blobs (PNG endpoints) and other instances untouched.

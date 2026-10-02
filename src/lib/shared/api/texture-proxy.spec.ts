@@ -28,6 +28,25 @@ describe("proxyApiAssetUrls", () => {
     });
   });
 
+  it("maps nmsr.nickac.dev renders to skins.mcstats.com", ({ expect }) => {
+    const id = "aad581b2f90048a785a7573d31d7b862";
+    expect(
+      proxyApiAssetUrls([
+        `https://nmsr.nickac.dev/headiso/${id}?noshading&no=shadow`,
+        `https://nmsr.nickac.dev/face/${id}`,
+        `https://nmsr.nickac.dev/bust/${id}?y=-20`,
+        `https://nmsr.nickac.dev/fullbody/${id}?no=shadow`,
+        `https://nmsr.nickac.dev/unknown/${id}`
+      ])
+    ).toEqual([
+      `https://skins.mcstats.com/skull/${id}?scale=2`,
+      `https://skins.mcstats.com/face/${id}?size=512`,
+      `https://skins.mcstats.com/bust/${id}?scale=2`,
+      `https://skins.mcstats.com/body/front/${id}?scale=2`,
+      `https://nmsr.nickac.dev/unknown/${id}`
+    ]);
+  });
+
   it("leaves non-plain objects untouched", ({ expect }) => {
     const blob = new Blob(["png"]);
     expect(proxyApiAssetUrls(blob)).toBe(blob);
