@@ -15,9 +15,9 @@
     },
     "enabled": true,
     "logs": {
-      "enabled": false,
+      "enabled": true,
       "destinations": [],
-      "head_sampling_rate": 0,
+      "head_sampling_rate": 1,
       "invocation_logs": false,
       "persist": true
     },
