@@ -1,10 +1,10 @@
 <script lang="ts">
   import { getPreferences } from "$ctx";
-  import { SettingsTab } from "$lib/components/header/types";
   import { ScrollArea } from "$ui/scroll-area";
   import * as Tabs from "$ui/tabs";
   import Pickaxe from "@lucide/svelte/icons/pickaxe";
   import Settings2 from "@lucide/svelte/icons/settings-2";
+  import { SettingsTab } from "#lib/components/header/types";
   import SettingToggleRow from "./SettingToggleRow.svelte";
 
   const preferences = getPreferences();

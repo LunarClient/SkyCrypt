@@ -10,7 +10,7 @@
 
 `.github/workflows/deploy-workers.yml` runs the existing lint, Svelte/TypeScript, and test checks before building and deploying this fork. `dev` selects the `cloudflare-production` GitHub environment; other branches select `cloudflare-development` and upload a preview version with a branch alias. A missing development Worker is initialized before its first preview upload.
 
-Each GitHub environment must supply the `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` secrets and the `CLOUDFLARE_ENV` variable (`production` or `development`). Restrict `cloudflare-production` to the `dev` branch. Account IDs come from those secrets, not Wrangler files. Both accounts use the Worker name `skycrypt-embed`; production owns `skycrypt-embed.lunarclient.com`, while development has no custom domain. Both environments retain the existing SkyCrypt API URLs.
+Each GitHub environment must supply the `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` secrets and the `CLOUDFLARE_ENV` variable (`production` or `development`). Restrict `cloudflare-production` to the `dev` branch. Account IDs come from those secrets, not Wrangler files. Both accounts use the Worker name `skycrypt-embed`; production owns `skycrypt-embed.lunarclient.com`, while development has no custom domain. Both environments call the SkyCrypt API at `https://api.shiiyu.moe/api/`.
 
 Before enabling this workflow, provision the GitHub environments and account credentials, configure any required runtime secrets in the destination accounts, and disable the old Workers Builds integration so it does not deploy alongside GitHub Actions. The destination production account must contain the `lunarclient.com` zone. Deployments use `--no-x-provision` and no longer bind the old shared-account observability Tail Worker.
 
@@ -19,7 +19,7 @@ Local validation without deployment:
 ```sh
 pnpm install --frozen-lockfile
 cp .env.example .env
-CLOUDFLARE_ENV=development PUBLIC_API_URL=https://sky.shiiyu.moe/api/ PUBLIC_SERVER_API_URL=https://sky.shiiyu.moe/api/ pnpm build
+CLOUDFLARE_ENV=development PUBLIC_SERVER_API_URL=https://api.shiiyu.moe/api/ pnpm build
 pnpm exec wrangler deploy --dry-run --no-x-provision --env development
 pnpm exec wrangler deploy --dry-run --no-x-provision --env production
 ```
@@ -30,7 +30,7 @@ pnpm exec wrangler deploy --dry-run --no-x-provision --env production
     <img alt="SkyCrypt 🍣" height="96px" src="static/img/logo.avif">
   </picture>
 </p>
-<h1 align="center">A Hypixel Skyblock Profile Viewer</h1>
+<h1 align="center">A Hypixel SkyBlock Profile Viewer</h1>
 
 <p align='center'>
   <a href="https://www.patreon.com/shiiyu"><img alt="Sponsor" src="https://img.shields.io/badge/sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white" /></a>
@@ -45,7 +45,7 @@ A website that provides per-player information about the game Hypixel SkyBlock.
 Originally inspired by [LeaPhant's skyblock-stats](https://github.com/LeaPhant/skyblock-stats).
 
 - **Website**: https://sky.shiiyu.moe
-- **Development Website**: https://cupcake.shiiyu.moe
+- **Beta**: turn on Beta Version in the settings on the website
 - **Backend**: [SkyCrypt-Backend](https://github.com/SkyCryptWebsite/SkyCrypt-Backend)
 
 ---

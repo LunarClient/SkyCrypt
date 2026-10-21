@@ -1,36 +1,28 @@
 <script lang="ts">
+  import { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } from "$app/env/public";
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { getFavorites } from "$ctx";
-  import { env } from "$env/dynamic/public";
-  import { ContributorCard, ContributorCardSkeleton, CtaCard } from "$lib/components/misc";
-  import PostCard from "$lib/components/newsroom/PostCard.svelte";
-  import { Notice } from "$lib/components/notices";
-  import { listPosts } from "$lib/shared/api/cms-api.remote";
-  import { resolveUuidByUsername } from "$lib/shared/api/skycrypt-api.remote";
   import { getContributors } from "$routes/contributors.remote";
-  import { Button, buttonVariants } from "$ui/button";
+  import { Button } from "$ui/button";
   import * as ButtonGroup from "$ui/button-group";
-  import * as Collapsible from "$ui/collapsible";
   import { Input } from "$ui/input";
-  import * as Item from "$ui/item";
   import { Skeleton } from "$ui/skeleton";
   import { Spinner } from "$ui/spinner";
   import * as Tooltip from "$ui/tooltip";
-  import ArrowRight from "@lucide/svelte/icons/arrow-right";
-  import ChevronDownIcon from "@lucide/svelte/icons/chevron-down";
   import CodeXml from "@lucide/svelte/icons/code-xml";
   import GitPullRequestArrow from "@lucide/svelte/icons/git-pull-request-arrow";
-  import NewspaperIcon from "@lucide/svelte/icons/newspaper";
   import SearchIcon from "@lucide/svelte/icons/search";
   import Server from "@lucide/svelte/icons/server";
   import Star from "@lucide/svelte/icons/star";
   import { isHttpError } from "@sveltejs/kit";
   import { onMount } from "svelte";
+  import { ContributorCard, ContributorCardSkeleton, CtaCard } from "#lib/components/misc";
+  import { Notice } from "#lib/components/notices";
+  import { resolveUuidByUsername } from "#lib/shared/api/skycrypt-api.remote";
   import { Role } from "./enums";
   import { schema } from "./schema";
 
-  const { PUBLIC_DISCORD_INVITE, PUBLIC_PATREON } = env;
   const favorites = getFavorites();
 
   let searchQuery = $state<string>(null!);
@@ -38,8 +30,6 @@
 
   let submittedSearchLoading = $state(false);
   let submittedSearchError = $state<string>();
-
-  let newsroomOpen = $state(false);
 
   function getErrorMessage(err: unknown) {
     const httpError = err as { body?: unknown };
@@ -109,7 +99,7 @@
 
     try {
       const response = await resolveUuidByUsername({ username });
-      await goto(resolve("/stats/[ign]", { ign: response.username ?? "" }));
+      await goto(resolve("/stats/[ign=ign]/[[profile=profile]]", { ign: response.username ?? "" }));
     } catch (err) {
       submittedSearchError = getErrorMessage(err);
     } finally {
@@ -183,70 +173,7 @@
     {/if}
   </div>
 
-  <svelte:boundary>
-    {#snippet pending()}
-      <section
-        class="flex flex-col gap-4 rounded-xl glass p-4 glass-brightness-150 glass-contrast-60 dark:glass-brightness-50 dark:glass-contrast-100">
-        <Skeleton class="h-6 w-1/5 rounded" />
-        <Skeleton class="h-6 w-2/5 rounded" />
-        <div class="grid grid-cols-1 gap-5 @md:grid-cols-2 @xl:grid-cols-3">
-          {#each new Array(3) as _, i (i)}
-            <div class="flex flex-col overflow-hidden rounded-xl border">
-              <Skeleton class="aspect-video w-full rounded-none" />
-              <div class="flex flex-col gap-2.5 p-4">
-                <Skeleton class="h-4 w-2/5 rounded" />
-                <Skeleton class="h-6 w-4/5 rounded" />
-                <Skeleton class="h-12 rounded" />
-              </div>
-            </div>
-          {/each}
-        </div>
-      </section>
-    {/snippet}
-
-    {#snippet failed()}{/snippet}
-
-    {const newsroom = await listPosts({ page: 1, limit: 3 })}
-    {#if newsroom && newsroom.docs.length > 0}
-      <section
-        class="flex flex-col rounded-xl border glass px-4 py-3.5 glass-brightness-150 glass-contrast-60 dark:glass-brightness-50 dark:glass-contrast-100">
-        <Item.Root class="p-0">
-          <Item.Media variant="icon">
-            <NewspaperIcon class="size-6" />
-          </Item.Media>
-          <Item.Content>
-            <Item.Title>Newsroom</Item.Title>
-            <Item.Description>Latest announcements and updates</Item.Description>
-          </Item.Content>
-          <Item.Actions>
-            <Button href="/newsroom" data-sveltekit-preload-data="hover" variant="outline">
-              View all
-              <ArrowRight class="size-4" />
-            </Button>
-            <Button
-              class={buttonVariants({
-                variant: "outline",
-                size: "icon"
-              })}
-              onclick={() => (newsroomOpen = !newsroomOpen)}>
-              <ChevronDownIcon
-                data-state={newsroomOpen ? "open" : "closed"}
-                class="size-4 transition-[rotate] duration-150 data-[state=open]:rotate-180" />
-            </Button>
-          </Item.Actions>
-        </Item.Root>
-
-        <Collapsible.Root bind:open={newsroomOpen}>
-          <Collapsible.Content class="mt-4 grid grid-cols-1 gap-4 @md:grid-cols-2 @xl:grid-cols-3">
-            {#each newsroom?.docs as post (post.id)}
-              <PostCard {post} />
-            {/each}
-          </Collapsible.Content>
-        </Collapsible.Root>
-      </section>
-    {/if}
-  </svelte:boundary>
-
+  <!-- No newsroom section: posts are read from Postgres, which the embed does not have. -->
   <Tooltip.Provider delayDuration={75} skipDelayDuration={75}>
     <div class="grid grid-cols-1 gap-5 @xl:grid-cols-2 @5xl:grid-cols-3">
       {#if favorites.current.length === 0}
@@ -257,7 +184,7 @@
       {:else}
         {#each favorites.current.toReversed() as favorite, index (index)}
           <ContributorCard
-            user={{ id: favorite.uuid, username: favorite.ign, role: Role.FAVORITE, displayName: favorite.displayName }}
+            user={{ id: favorite.uuid, username: favorite.ign, role: Role.FAVORITE }}
             options={{ favorite: true }}
             {iconMapper} />
         {/each}
@@ -273,7 +200,7 @@
           <Notice title="Failed to load contributors." type="error" error={err} {retry} class="col-span-full" />
         {/snippet}
 
-        {#each await getContributors() as contributor (contributor.id)}
+        {#each await getContributors(__PRERENDER_VERSION__) as contributor (contributor.id)}
           <ContributorCard user={contributor} {iconMapper} />
         {/each}
       </svelte:boundary>

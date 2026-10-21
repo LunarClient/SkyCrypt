@@ -1,6 +1,6 @@
-import { proxyApiAssetUrls, textureUpstreamOrigin } from "$lib/shared/api/texture-proxy";
-import { USER_AGENT } from "$lib/shared/constants/user-agent";
 import { json } from "@sveltejs/kit";
+import { proxyApiAssetUrls, textureUpstreamOrigin } from "#lib/shared/api/texture-proxy";
+import { USER_AGENT } from "#lib/shared/constants/user-agent";
 import type { RequestHandler } from "./$types";
 
 // Proxies SkyCrypt API assets so they are requested with our User-Agent instead of the

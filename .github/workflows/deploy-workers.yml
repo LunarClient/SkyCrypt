@@ -38,8 +38,7 @@ jobs:
         run: pnpm build
         env:
           PUBLIC_COMMIT_HASH: ${{ github.sha }}
-          PUBLIC_SERVER_API_URL: https://sky.shiiyu.moe/api/
-          PUBLIC_API_URL: https://sky.shiiyu.moe/api/
+          PUBLIC_SERVER_API_URL: https://api.shiiyu.moe/api/
           SERVER_API_TOKEN: ${{ secrets.SERVER_API_TOKEN }}
 
       - name: Get preview alias

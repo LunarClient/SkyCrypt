@@ -1,13 +1,12 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { JsonLd } from "$lib/components/misc";
-  import type { ModelsEmbedData } from "$lib/shared/api/orval-generated";
-  import { getLongDescription, getMetaTitle, getShortDescription } from "$lib/shared/embedGenerator";
   import { mode } from "mode-watcher";
   import SvelteSeo from "svelte-seo";
+  import { JsonLd } from "#lib/components/misc";
+  import type { ModelsEmbedData } from "#lib/shared/api/orval-generated";
+  import { getGenericDescription, getGenericTitle } from "#lib/shared/embedGenerator";
 
   const { embedData }: { embedData: ModelsEmbedData } = $props();
-  const isValidEmbed = $derived(!!embedData.username);
   const isStatsPage = $derived(page.url.pathname.includes("/stats/"));
   const routeIgn = $derived(page.params.ign);
   const routeProfile = $derived(page.params.profile || embedData.profile_cute_name);
@@ -18,9 +17,11 @@
       : `/stats/${encodeURIComponent(profileIdentifier)}`
   );
   const canonicalUrl = $derived(`https://sky.shiiyu.moe${canonicalPath}`);
-  const profileDescription = $derived(
-    isStatsPage && !isValidEmbed ? getShortDescription(embedData) : getLongDescription(embedData)
+  const seoTitle = $derived(
+    embedData.username ? `${getGenericTitle(embedData)} | SkyCrypt` : `${profileIdentifier} | SkyCrypt`
   );
+  const seoDescription = $derived(getGenericDescription(embedData));
+  const ogTitle = $derived(getGenericTitle(embedData));
   const profileImage = $derived(`https://skins.mcstats.com/bust/${embedData.uuid}?scale=2`);
   const themeColor = $derived(
     embedData.rank?.plusColor || embedData.rank?.rankColor || (mode.current === "light" ? "#dbdbdb" : "#282828")
@@ -53,8 +54,8 @@
     "@context": "https://schema.org",
     "@type": "ProfilePage",
     "@id": `${canonicalUrl}#profilepage`,
-    name: getMetaTitle(embedData) || profileIdentifier,
-    description: profileDescription,
+    name: seoTitle,
+    description: seoDescription,
     url: canonicalUrl,
     mainEntity: {
       "@type": "Person",
@@ -81,12 +82,13 @@
 </svelte:head>
 
 <SvelteSeo
-  title="{embedData.displayName || profileIdentifier} | SkyCrypt"
-  description={profileDescription}
+  title={seoTitle}
+  description={seoDescription}
   canonical={canonicalUrl}
   openGraph={{
-    title: getMetaTitle(embedData),
-    description: getLongDescription(embedData),
+    title: ogTitle,
+    description: seoDescription,
+    url: canonicalUrl,
     type: "profile",
     profile: {
       username: embedData.username
@@ -96,17 +98,17 @@
         url: profileImage,
         width: 512,
         height: 512,
-        alt: embedData.displayName
+        alt: embedData.username || "Player Avatar"
       }
     ],
-    site_name: `SkyCrypt ${__NPM_PACKAGE_VERSION__ ? `• v${__NPM_PACKAGE_VERSION__}` : ""}`
+    site_name: `SkyCrypt ${__NPM_PACKAGE_VERSION__ ? `• v${__NPM_PACKAGE_VERSION__}` : ""}`.trim()
   }}
   twitter={{
     card: "summary",
     image: profileImage,
-    imageAlt: embedData.displayName,
-    title: getMetaTitle(embedData),
-    description: getLongDescription(embedData)
+    imageAlt: embedData.username || "Player Avatar",
+    title: ogTitle,
+    description: seoDescription
   }}
   {themeColor}
   manifest="/manifest.webmanifest" />

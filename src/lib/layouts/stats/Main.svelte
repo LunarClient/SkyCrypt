@@ -2,6 +2,8 @@
   import {
     CombinedContext,
     AllStatsContext,
+    EnchantmentsContext,
+    type Enchantments,
     getHoverContext,
     getInternalState,
     getPreferences,
@@ -10,13 +12,9 @@
     ProfileContext,
     setAllStatsContext,
     setCombinedContext,
+    setEnchantmentsContext,
     setProfileContext
   } from "$ctx";
-  import Settings from "$lib/components/header/settings";
-  import { ContainedItemsGrid, ItemContent } from "$lib/components/item";
-  import { Navbar } from "$lib/components/misc";
-  import Sections from "$lib/sections/Sections.svelte";
-  import type { ModelsCombinedOutput, ModelsStatData, ModelsStatsOutput } from "$lib/shared/api/orval-generated";
   import * as Dialog from "$ui/dialog";
   import * as Drawer from "$ui/drawer";
   import Image from "@lucide/svelte/icons/image";
@@ -24,15 +22,23 @@
   import { untrack } from "svelte";
   import { cubicOut } from "svelte/easing";
   import { fade } from "svelte/transition";
+  import Settings from "#lib/components/header/settings";
+  import { ContainedItemsGrid, ItemContent } from "#lib/components/item";
+  import { Navbar } from "#lib/components/misc";
+  import TooltipSetup from "#lib/components/tooltip/TooltipSetup.svelte";
+  import Sections from "#lib/sections/Sections.svelte";
+  import type { ModelsCombinedOutput, ModelsStatData, ModelsStatsOutput } from "#lib/shared/api/orval-generated";
 
   const {
     data: ctx,
     allStats,
-    combined
+    combined,
+    enchantments
   }: {
     data: ModelsStatsOutput;
     allStats: ModelsStatData[];
     combined: ModelsCombinedOutput | null;
+    enchantments: Enchantments;
   } = $props();
 
   const isHover = getHoverContext();
@@ -45,9 +51,11 @@
   // Initialize the profile context
   const profileClass = new ProfileContext();
   const allStatsClass = new AllStatsContext();
+  const enchantmentsClass = new EnchantmentsContext();
   const combinedClass = new CombinedContext();
   setProfileContext(profileClass);
   setAllStatsContext(allStatsClass);
+  setEnchantmentsContext(enchantmentsClass);
   setCombinedContext(combinedClass);
   $effect.pre(() => {
     if (!ctx) return;
@@ -66,7 +74,7 @@
         recentSearches.current[existingIndex] = {
           ...recentSearches.current[existingIndex],
           ign: username,
-          uuid: uuid
+          uuid
         };
       }
     });
@@ -83,6 +91,10 @@
 
   $effect.pre(() => {
     allStatsClass.current = allStats ?? [];
+  });
+
+  $effect.pre(() => {
+    enchantmentsClass.current = enchantments ?? [];
   });
 </script>
 
@@ -123,7 +135,7 @@
                     {/snippet}
                   </Avatar.Root>
                 {:else if browser && innerWidth >= 1024}
-                   {#await import('$lib/components/misc/Skin3D.svelte') then { default: Skin3D }}
+                   {#await import('#lib/components/misc/Skin3D.svelte') then { default: Skin3D }}
                     <Skin3D class="h-full" />
                   {/await}
                 {/if}
@@ -248,10 +260,13 @@
   </Drawer.Root>
 {/if}
 
+<!-- Inside Main so tooltip item content can read the stats contexts (e.g. enchantments) -->
+<TooltipSetup />
+
 {#if preferences.showGlint}
   <svg xmlns="http://www.w3.org/2000/svg" height="0" width="0" class="fixed">
     <filter id="enchanted-glint">
-      <feImage href="/img/enchanted-glint.gif" preserveAspectRatio="none" result="IMAGE"></feImage>
+      <feImage href="/img/enchanted-glint.avif" preserveAspectRatio="none" result="IMAGE"></feImage>
       <feBlend in="IMAGE" in2="SourceGraphic" mode="screen" result="BLEND"></feBlend>
       <feComposite operator="in" in="BLEND" in2="SourceGraphic"></feComposite>
     </filter>

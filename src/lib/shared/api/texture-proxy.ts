@@ -1,4 +1,4 @@
-import { env } from "$env/dynamic/public";
+import { PUBLIC_SERVER_API_URL } from "$app/env/public";
 
 /**
  * Same-origin path that SkyCrypt API assets (item renders, heads, resolved textures) are loaded through, so the browser
@@ -6,13 +6,14 @@ import { env } from "$env/dynamic/public";
  */
 export const TEXTURE_PROXY_PATH = "/textures";
 
-const apiOrigins = (): string[] => {
-  const urls = [env.PUBLIC_API_URL, env.PUBLIC_SERVER_API_URL].filter((url): url is string => !!url);
-  return [...new Set(urls.map((url) => new URL(url).origin))];
-};
+// Public SkyCrypt API hosts that can appear in API responses regardless of which one we call
+// (e.g. sky.shiiyu.moe returns api.shiiyu.moe asset URLs). They all serve the same asset paths.
+const PUBLIC_API_ORIGINS = ["https://api.shiiyu.moe", "https://beta-api.shiiyu.moe", "https://sky.shiiyu.moe"];
+
+const apiOrigins = (): string[] => [...new Set([textureUpstreamOrigin(), ...PUBLIC_API_ORIGINS])];
 
 /** The origin the proxy fetches from; the server URL may be a private hostname (e.g. Docker). */
-export const textureUpstreamOrigin = (): string => new URL(env.PUBLIC_SERVER_API_URL).origin;
+export const textureUpstreamOrigin = (): string => new URL(PUBLIC_SERVER_API_URL).origin;
 
 // The API embeds nmsr.nickac.dev player renders; serve the skins.mcstats.com equivalent instead.
 const NMSR_URL = /^https:\/\/nmsr\.nickac\.dev\/([a-z]+)\/([^/?#]+)/;

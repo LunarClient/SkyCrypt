@@ -29,8 +29,7 @@
     }
   },
   "vars": {
-    "PUBLIC_SERVER_API_URL": "https://sky.shiiyu.moe/api/",
-    "PUBLIC_API_URL": "https://sky.shiiyu.moe/api/"
+    "PUBLIC_SERVER_API_URL": "https://api.shiiyu.moe/api/"
   },
   "env": {
     "production": {
@@ -47,8 +46,7 @@
         }
       ],
       "vars": {
-        "PUBLIC_SERVER_API_URL": "https://sky.shiiyu.moe/api/",
-        "PUBLIC_API_URL": "https://sky.shiiyu.moe/api/"
+        "PUBLIC_SERVER_API_URL": "https://api.shiiyu.moe/api/"
       },
       "secrets_store_secrets": [
         {
@@ -67,8 +65,7 @@
       ],
       "routes": [],
       "vars": {
-        "PUBLIC_SERVER_API_URL": "https://sky.shiiyu.moe/api/",
-        "PUBLIC_API_URL": "https://sky.shiiyu.moe/api/"
+        "PUBLIC_SERVER_API_URL": "https://api.shiiyu.moe/api/"
       },
       "secrets_store_secrets": [
         {
