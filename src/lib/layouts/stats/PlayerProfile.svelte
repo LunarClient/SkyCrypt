@@ -1,13 +1,13 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
   import { getHoverContext, getProfileContext } from "$ctx";
-  import { APINotice } from "$lib/components/notices";
-  import { cn } from "$lib/shared/utils";
   import * as Avatar from "$ui/avatar";
   import * as Item from "$ui/item";
   import * as Popover from "$ui/popover";
   import Ban from "@lucide/svelte/icons/ban";
   import TriangleAlert from "@lucide/svelte/icons/triangle-alert";
+  import { APINotice } from "#lib/components/notices";
+  import { cn } from "#lib/shared/utils";
 
   let noticeOpen = $state(false);
   let ignOpen = $state(false);
@@ -52,7 +52,10 @@
           </div>
         </div>
       {/if}
-      <span class={cn(profile?.rank?.rankColor ? "pl-4" : "pl-2")}>{profile?.displayName}</span>
+      <span class={cn(profile?.rank?.rankColor ? "pl-4" : "pl-2")}>
+        <!-- No profile emoji: it is read from Postgres, which the embed does not have. -->
+        {profile?.username}
+      </span>
     </Popover.Trigger>
 
     <Popover.Content
@@ -73,7 +76,7 @@
             class="group flex-nowrap bg-foreground/5 [a]:transition-[scale,background-color] [a]:duration-300 [a]:ease-out [a]:hover:bg-foreground/10 [a]:interact:scale-95">
             {#snippet child({ props })}
               <a
-                href={resolve("/stats/[ign]/[[profile]]", {
+                href={resolve("/stats/[ign=ign]/[[profile=profile]]", {
                   ign: member.username ?? "",
                   profile: member?.profile_id
                 })}
@@ -112,7 +115,7 @@
   </Popover.Root>
   <span>on</span>
   <div
-    class="relative inline-flex items-center gap-2 rounded-full bg-foreground/10 px-2 py-1 align-middle text-xl font-semibold transition-[scale,background-color] duration-300 ease-out data-[disabled=false]:data-[open=true]:scale-95 data-[disabled=false]:data-[open=true]:bg-foreground/20 data-[warning=true]:border-2 data-[warning=true]:border-yellow-500/20 sm:text-3xl data-[disabled=false]:interact:scale-95 data-[disabled=false]:interact:bg-foreground/20"
+    class="relative inline-flex items-center gap-2 rounded-full bg-foreground/10 px-2 py-1 align-middle text-xl font-semibold transition-[scale,background-color] duration-300 ease-out data-[disabled=false]:data-[open=true]:scale-95 data-[disabled=false]:data-[open=true]:bg-foreground/20 data-[warning=true]:border-2 data-[warning=true]:border-accent-4/20 sm:text-3xl data-[disabled=false]:interact:scale-95 data-[disabled=false]:interact:bg-foreground/20"
     data-open={profileOpen || noticeOpen}
     data-warning={apiSettings.length > 0}
     bind:this={noticeRef}
@@ -151,7 +154,7 @@
               class="flex-nowrap bg-foreground/5 [a]:transition-[scale,background-color] [a]:duration-300 [a]:ease-out [a]:hover:bg-foreground/10 [a]:interact:scale-95">
               {#snippet child({ props })}
                 <a
-                  href={resolve("/stats/[ign]/[[profile]]", {
+                  href={resolve("/stats/[ign=ign]/[[profile=profile]]", {
                     ign: profile?.username ?? "",
                     profile: otherProfile.cute_name
                   })}
@@ -178,8 +181,8 @@
 
     {#if apiSettings.length}
       <Popover.Root bind:open={noticeOpen}>
-        <Popover.Trigger class="rounded-full bg-yellow-500/20 px-4 py-2" onpointerenter={() => (noticeOpen = true)}>
-          <TriangleAlert class="size-6 motion-preset-pulse text-yellow-500 motion-duration-1000" />
+        <Popover.Trigger class="rounded-full bg-accent-4/20 px-4 py-2" onpointerenter={() => (noticeOpen = true)}>
+          <TriangleAlert class="size-6 motion-preset-pulse text-accent-4 motion-duration-1000" />
         </Popover.Trigger>
 
         <Popover.Content

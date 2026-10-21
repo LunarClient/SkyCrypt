@@ -1,7 +1,10 @@
-import { USER_AGENT } from "$lib/shared/constants/user-agent";
+import { log } from "evlog";
+import { USER_AGENT } from "#lib/shared/constants/user-agent";
 import type { RequestHandler } from "./$types";
 
 // An internal endpoint used to proxy images for security/privacy reasons.
+// Plain fetch rather than upstream's node:http fetchPublicImage (#lib/server/image-proxy): Workers don't
+// support its custom DNS lookup, and Workers fetch can't reach private networks to begin with.
 export const GET: RequestHandler = async ({ request }) => {
   const url = new URL(request.url);
   const imageUrl = url.searchParams.get("url");
@@ -87,7 +90,7 @@ export const GET: RequestHandler = async ({ request }) => {
       throw error;
     }
   } catch (error) {
-    console.error("Image Proxy Error:", error);
+    log.error({ action: "image_proxy.failed", error });
     return new Response("Error fetching image", { status: 500 });
   }
 };

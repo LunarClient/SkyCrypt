@@ -1,10 +1,7 @@
 import { describe, it, vi } from "vitest";
 
-vi.mock("$env/dynamic/public", () => ({
-  env: {
-    PUBLIC_API_URL: "https://sky.shiiyu.moe/api/",
-    PUBLIC_SERVER_API_URL: "http://backend:8080/api/"
-  }
+vi.mock("$app/env/public", () => ({
+  PUBLIC_SERVER_API_URL: "http://backend:8080/api/"
 }));
 
 const { proxyApiAssetUrls, unproxyApiAssetUrls } = await import("./texture-proxy");
@@ -15,6 +12,7 @@ describe("proxyApiAssetUrls", () => {
       texture_path: "https://sky.shiiyu.moe/api/item/FLAMEBREAKER_LEGGINGS",
       pets: [{ texture: "http://backend:8080/api/head/abc" }],
       texture: "https://sky.shiiyu.moe/cache/rendered/x.webp",
+      icon: "https://api.shiiyu.moe/assets/resourcepacks/Hypixel_Plus/pack.webp",
       other: "https://example.com/api/item/X",
       level: 5
     };
@@ -23,6 +21,7 @@ describe("proxyApiAssetUrls", () => {
       texture_path: "/textures/api/item/FLAMEBREAKER_LEGGINGS",
       pets: [{ texture: "/textures/api/head/abc" }],
       texture: "/textures/cache/rendered/x.webp",
+      icon: "/textures/assets/resourcepacks/Hypixel_Plus/pack.webp",
       other: "https://example.com/api/item/X",
       level: 5
     });

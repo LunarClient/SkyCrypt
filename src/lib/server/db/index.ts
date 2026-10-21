@@ -1,4 +1,4 @@
-import { env } from "$env/dynamic/private";
+import { DATABASE_URL } from "$app/env/private";
 import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
@@ -11,8 +11,8 @@ let instance: PostgresJsDatabase<typeof schema> | undefined;
 
 function getDb(): PostgresJsDatabase<typeof schema> {
   if (!instance) {
-    if (!env.DATABASE_URL) throw new Error("DATABASE_URL is not set");
-    const client = postgres(env.DATABASE_URL);
+    if (!DATABASE_URL) throw new Error("DATABASE_URL is not set");
+    const client = postgres(DATABASE_URL);
     instance = drizzle(client, { schema });
   }
   return instance;

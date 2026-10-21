@@ -1,5 +1,5 @@
-import { USER_AGENT } from "$lib/shared/constants/user-agent";
-import { readEnabledPacksCookie, serializePackIds } from "$lib/shared/resource-packs";
+import { USER_AGENT } from "#lib/shared/constants/user-agent";
+import { readEnabledPacksCookie, serializePackIds } from "#lib/shared/resource-packs";
 
 export type ResolvedItemTexture = {
   texture: string;

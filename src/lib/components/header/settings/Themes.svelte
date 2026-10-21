@@ -1,10 +1,5 @@
 <script lang="ts">
   import { getThemeContext } from "$ctx";
-  import { SettingsTab } from "$lib/components/header/types";
-  import { getThemeIcons } from "$lib/shared/api/themes.remote";
-  import { readDefaultThemeCssVars } from "$lib/shared/themes/computed-css-vars";
-  import { FIRST_PARTY_THEMES } from "$lib/shared/themes/first-party";
-  import type { ThemeModeName, ThemeV5 } from "$lib/shared/themes/schema";
   import { Label } from "$ui/label";
   import { ScrollArea } from "$ui/scroll-area";
   import * as Tabs from "$ui/tabs";
@@ -12,6 +7,11 @@
   import PaintBucket from "@lucide/svelte/icons/paint-bucket";
   import { Avatar, RadioGroup } from "bits-ui";
   import { mode } from "mode-watcher";
+  import { SettingsTab } from "#lib/components/header/types";
+  import { getThemeIcons } from "#lib/shared/api/themes.remote";
+  import { readDefaultThemeCssVars } from "#lib/shared/themes/computed-css-vars";
+  import { FIRST_PARTY_THEMES } from "#lib/shared/themes/first-party";
+  import type { ThemeModeName, ThemeV5 } from "#lib/shared/themes/schema";
 
   const themeContext = getThemeContext();
 
