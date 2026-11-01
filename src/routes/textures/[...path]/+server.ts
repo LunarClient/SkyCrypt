@@ -1,14 +1,12 @@
 import { json } from "@sveltejs/kit";
-import { proxyApiAssetUrls, textureUpstreamOrigin } from "#lib/shared/api/texture-proxy";
+import { proxyApiAssetUrls, textureUpstreamUrl } from "#lib/shared/api/texture-proxy";
 import { USER_AGENT } from "#lib/shared/constants/user-agent";
 import type { RequestHandler } from "./$types";
 
 // Proxies SkyCrypt API assets so they are requested with our User-Agent instead of the
 // visitor's. Only images and the JSON from item `/resolve` lookups are passed through.
 export const GET: RequestHandler = async ({ params, url }) => {
-  const upstream = new URL(textureUpstreamOrigin());
-  // Assigning the pathname (rather than resolving a relative URL) keeps `//host` paths on the API origin.
-  upstream.pathname = `/${params.path}`;
+  const upstream = textureUpstreamUrl(params.path);
   upstream.search = url.search;
 
   const response = await fetch(upstream, { headers: { "User-Agent": USER_AGENT } });
