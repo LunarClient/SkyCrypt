@@ -1,10 +1,10 @@
 import { PUBLIC_DISCORD_INVITE } from "$app/env/public";
 import { gameModeIcons } from "$src/lib/shared/constants/game-modes";
 import type { APIContainerComponent } from "discord-api-types/v10";
-import type { ModelsEmbedData } from "#lib/shared/api/orval-generated";
+import type { EmbedData } from "#lib/shared/api/orval-generated";
 import { getLongDescription } from "#lib/shared/embedGenerator";
 
-export function createDiscordEmbed(data: ModelsEmbedData) {
+export function createDiscordEmbed(data: EmbedData) {
   const color =
     [data.rank?.plusColor, data.rank?.rankColor].find((value) => /^#[\da-f]{6}$/i.test(value ?? "")) || "#282828";
   const username = encodeURIComponent(data.username || "");
@@ -47,7 +47,7 @@ export function createDiscordEmbed(data: ModelsEmbedData) {
               style: 5,
               label: "SkyCrypt",
               url: `${profileUrl}${trackingParams}`,
-              emoji: { id: "1558259246070505512", name: "skycrypt" }
+              emoji: { id: "1565779361947324697", name: "skycrypt" }
             },
             {
               type: 2,

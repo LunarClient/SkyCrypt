@@ -68,7 +68,7 @@
       "@id": "https://sky.shiiyu.moe/#organization",
       name: "SkyCrypt",
       url: "https://sky.shiiyu.moe",
-      logo: "https://sky.shiiyu.moe/img/app-icons/512.png"
+      logo: "https://sky.shiiyu.moe/img/skycrypt-logo.avif"
     },
     potentialAction: {
       "@type": "SearchAction",
@@ -259,7 +259,7 @@
 
 <svelte:head>
   {#if !noEmbedUrls.some((url) => page.url.pathname.startsWith(url))}
-    <link rel="icon" href="/favicon.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon.png?v=20261028" sizes="32x32" type="image/png" />
   {/if}
   {#if PUBLIC_UMAMI_SCRIPT_URL && PUBLIC_UMAMI_WEBSITE_ID && !building}
     <script
@@ -295,9 +295,9 @@
       type: "website",
       images: [
         {
-          url: "https://sky.shiiyu.moe/img/app-icons/512.png",
-          width: 512,
-          height: 512,
+          url: "https://sky.shiiyu.moe/img/skycrypt-logo.avif",
+          width: 500,
+          height: 500,
           alt: "SkyCrypt Logo"
         }
       ]
@@ -306,10 +306,9 @@
       card: "summary",
       title: "SkyBlock Stats",
       description: "A beautiful site for sharing your SkyBlock profile 🍣",
-      image: "https://sky.shiiyu.moe/img/app-icons/512.png",
+      image: "https://sky.shiiyu.moe/img/skycrypt-logo.avif",
       imageAlt: "SkyCrypt Logo"
-    }}
-    manifest="/manifest.webmanifest" />
+    }} />
   <JsonLd data={websiteJsonLd} />
 {/if}
 

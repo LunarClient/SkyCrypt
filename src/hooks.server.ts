@@ -1,6 +1,7 @@
 import { dev } from "$app/env";
 import { HYPERDX_API_KEY, HYPERDX_OTLP_ENDPOINT } from "$app/env/private";
 import { PUBLIC_RELEASE_CHANNEL } from "$app/env/public";
+import { isSpanContextValid } from "@opentelemetry/api";
 import { sequence, type Handle, type HandleFetch, type HandleServerError } from "@sveltejs/kit/hooks";
 import { initLogger, log, toLoggerConfig, toMiddlewareOptions, type DrainContext } from "evlog";
 import { createFsDrain } from "evlog/fs";
@@ -83,6 +84,13 @@ const headersHandler = (async ({ event, resolve }) => {
   return response;
 }) satisfies Handle;
 
+// Links the request's wide event to its trace in HyperDX. Without the OTel SDK the spans are no-ops with invalid ids.
+const traceHandler: Handle = ({ event, resolve }) => {
+  const context = event.tracing.root.spanContext();
+  if (isSpanContextValid(context)) event.locals.log.set({ traceId: context.traceId, spanId: context.spanId });
+  return resolve(event);
+};
+
 // Every server-side `event.fetch` identifies as the embed, never as the visitor's browser.
 export const handleFetch = (({ request, fetch }) => {
   const headers = new Headers(request.headers);
@@ -90,4 +98,4 @@ export const handleFetch = (({ request, fetch }) => {
   return fetch(new Request(request, { headers }));
 }) satisfies HandleFetch;
 
-export const handle = sequence(evlogHandle, headersHandler) satisfies Handle;
+export const handle = sequence(evlogHandle, traceHandler, headersHandler) satisfies Handle;

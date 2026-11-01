@@ -1,5 +1,75 @@
 # Changelog
 
+## 4.6.0
+
+### Minor Changes
+
+- Feat(brand): replace logo and relicense brand assets _[`#382`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/382) [`045a365`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/045a365b03cfc59fcfb54a19e8a72c13c5ffead7) [@DarthGigi](https://github.com/DarthGigi)_
+
+### Patch Changes
+
+- Feat(newsroom): add a refresh cache option to post images _[`#382`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/382) [`ce08456`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/ce084568770cef680a116bbaf243a2b244aeaab1) [@DarthGigi](https://github.com/DarthGigi)_
+
+## 4.6.0-beta.1
+
+### Patch Changes
+
+- Feat(newsroom): add a refresh cache option to post images _[`ce08456`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/ce084568770cef680a116bbaf243a2b244aeaab1) [@DarthGigi](https://github.com/DarthGigi)_
+
+## 4.6.0-beta.0
+
+### Minor Changes
+
+- Feat(brand): replace logo and relicense brand assets _[`045a365`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/045a365b03cfc59fcfb54a19e8a72c13c5ffead7) [@DarthGigi](https://github.com/DarthGigi)_
+
+## 4.5.2
+
+### Patch Changes
+
+- Stop scroll areas from fading their edges in Firefox when there is nothing to scroll _[`#379`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/379) [`a6ab980`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/a6ab9802f9b810a7a76f478fc292e148966b7465) [@DarthGigi](https://github.com/DarthGigi)_
+
+## 4.5.2-beta.0
+
+### Patch Changes
+
+- Stop scroll areas from fading their edges in Firefox when there is nothing to scroll _[`a6ab980`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/a6ab9802f9b810a7a76f478fc292e148966b7465) [@DarthGigi](https://github.com/DarthGigi)_
+
+## 4.5.1
+
+### Patch Changes
+
+- Fix every page returning a 500 error when server tracing is enabled _[`#377`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/377) [`dfc474c`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/dfc474c59cd705eb80766a979359330dcba6c1a9) [@DarthGigi](https://github.com/DarthGigi)_
+
+## 4.5.1-beta.0
+
+### Patch Changes
+
+- Fix every page returning a 500 error when server tracing is enabled _[`#377`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/377) [`dfc474c`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/dfc474c59cd705eb80766a979359330dcba6c1a9) [@DarthGigi](https://github.com/DarthGigi)_
+
+## 4.5.0
+
+### Minor Changes
+
+- Show API key, banner, session and developer mode changes immediately while they save, fix the API key page breaking after enabling, disabling or changing a key's rate limit, and send server traces to HyperDX _[`#375`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/375) [`5d4653d`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/5d4653d9705caa7bdc00562409c233e91ab44a24) [@DarthGigi](https://github.com/DarthGigi)_
+
+## 4.5.0-beta.0
+
+### Minor Changes
+
+- Show API key, banner, session and developer mode changes immediately while they save, fix the API key page breaking after enabling, disabling or changing a key's rate limit, and send server traces to HyperDX _[`5d4653d`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/5d4653d9705caa7bdc00562409c233e91ab44a24) [@DarthGigi](https://github.com/DarthGigi)_
+
+## 4.4.1
+
+### Patch Changes
+
+- Error messages now say what went wrong, such as an unknown player or a missing profile, instead of showing the backend's raw error. The frontend uses the client generated from the backend's new Huma spec. _[`#373`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/pull/373) [`d2e81d3`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/d2e81d377c6cdbda5ee92b2beb925ce216a0f9a7) [@DarthGigi](https://github.com/DarthGigi)_
+
+## 4.4.1-beta.0
+
+### Patch Changes
+
+- Error messages now say what went wrong, such as an unknown player or a missing profile, instead of showing the backend's raw error. The frontend uses the client generated from the backend's new Huma spec. _[`d2e81d3`](https://github.com/SkyCryptWebsite/SkyCrypt-Frontend/commit/d2e81d377c6cdbda5ee92b2beb925ce216a0f9a7) [@DarthGigi](https://github.com/DarthGigi)_
+
 ## 4.4.0
 
 ### Minor Changes

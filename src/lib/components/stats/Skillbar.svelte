@@ -7,12 +7,12 @@
   import { createHover } from "svelte-interactions";
   import { cubicInOut } from "svelte/easing";
   import { Tween } from "svelte/motion";
-  import type { ModelsSkill } from "#lib/shared/api/orval-generated";
+  import type { Skill } from "#lib/shared/api/orval-generated";
   import { calculatePercentage, formatNumber } from "#lib/shared/helper";
 
   type Props = {
     skill: string;
-    skillData: ModelsSkill;
+    skillData: Skill;
     apiEnabled?: boolean;
     class?: string | null | undefined;
   };
