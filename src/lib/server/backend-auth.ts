@@ -1,4 +1,4 @@
-import { createHash, timingSafeEqual } from "node:crypto";
+import { timingSafeEqual } from "node:crypto";
 import { SERVER_API_TOKEN } from "$app/env/private";
 import { error } from "@sveltejs/kit";
 
@@ -7,10 +7,11 @@ import { error } from "@sveltejs/kit";
  * closed even if a proxy rule ever exposes `/api/internal`.
  */
 export function requireBackendToken(request: Request) {
-  const provided = request.headers.get("x-api-token") ?? "";
-  // Hashing both sides gives equal lengths, which timingSafeEqual requires.
-  const digest = (value: string) => createHash("sha256").update(value).digest();
-  if (!SERVER_API_TOKEN || !timingSafeEqual(digest(provided), digest(SERVER_API_TOKEN))) {
+  const provided = Buffer.from(request.headers.get("x-api-token") ?? "");
+  // The Go backend trims the token before sending it.
+  const expected = Buffer.from(SERVER_API_TOKEN?.trim() ?? "");
+  // Like Go's subtle.ConstantTimeCompare on the backend, only the token's length leaks.
+  if (!expected.length || provided.length !== expected.length || !timingSafeEqual(provided, expected)) {
     error(401, "Unauthorized");
   }
 }

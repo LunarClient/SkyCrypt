@@ -1,7 +1,7 @@
 import { PUBLIC_DISCORD_INVITE } from "$app/env/public";
 import type { APIBaseComponent, ComponentType } from "discord-api-types/v10";
 import { describe, expect, it } from "vitest";
-import type { ModelsEmbedData } from "#lib/shared/api/orval-generated";
+import type { EmbedData } from "#lib/shared/api/orval-generated";
 import { createDiscordEmbed, serializeDiscordEmbed } from "./discordEmbed";
 
 describe("discordEmbed", () => {
@@ -56,7 +56,7 @@ describe("discordEmbed", () => {
           style: 5,
           label: "SkyCrypt",
           url: "https://sky.shiiyu.moe/stats/tiltedhoney/Kiwi?utm_source=SkyCrypt&utm_campaign=DiscordEmbed",
-          emoji: { id: "1558259246070505512", name: "skycrypt" }
+          emoji: { id: "1565779361947324697", name: "skycrypt" }
         },
         {
           type: 2,
@@ -85,7 +85,7 @@ describe("discordEmbed", () => {
   });
 
   describe("Discord Component Embed requirements and limits", () => {
-    const fullMockData: ModelsEmbedData = {
+    const fullMockData: EmbedData = {
       username: "tiltedhoney",
       profile_cute_name: "Kiwi",
       game_mode: "ironman",

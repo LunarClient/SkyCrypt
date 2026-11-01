@@ -7,13 +7,32 @@ import { PUBLIC_SERVER_API_URL } from "$app/env/public";
 export const TEXTURE_PROXY_PATH = "/textures";
 
 // Public SkyCrypt API hosts that can appear in API responses regardless of which one we call
-// (e.g. sky.shiiyu.moe returns api.shiiyu.moe asset URLs). They all serve the same asset paths.
-const PUBLIC_API_ORIGINS = ["https://api.shiiyu.moe", "https://beta-api.shiiyu.moe", "https://sky.shiiyu.moe"];
-
-const apiOrigins = (): string[] => [...new Set([textureUpstreamOrigin(), ...PUBLIC_API_ORIGINS])];
+// (e.g. api.shiiyu.moe resolves items to beta-api.shiiyu.moe renders). They don't all serve the same
+// files: cached renders only exist on the host that rendered them, so proxy paths keep the host.
+const PUBLIC_API_HOSTS = ["api.shiiyu.moe", "beta-api.shiiyu.moe", "sky.shiiyu.moe"];
 
 /** The origin the proxy fetches from; the server URL may be a private hostname (e.g. Docker). */
 export const textureUpstreamOrigin = (): string => new URL(PUBLIC_SERVER_API_URL).origin;
+
+// `/textures/<path>` is on the upstream origin; `/textures/<host>/<path>` is on another public API host.
+function proxyPrefixes(): [origin: string, proxyPath: string][] {
+  const upstream = textureUpstreamOrigin();
+  const others = PUBLIC_API_HOSTS.filter((host) => `https://${host}` !== upstream);
+  return [
+    [upstream, TEXTURE_PROXY_PATH],
+    ...others.map((host): [string, string] => [`https://${host}`, `${TEXTURE_PROXY_PATH}/${host}`])
+  ];
+}
+
+/** The API URL a proxied path (without the `/textures/` prefix) is fetched from. */
+export function textureUpstreamUrl(path: string): URL {
+  const [first, ...rest] = path.split("/");
+  const host = PUBLIC_API_HOSTS.includes(first) ? first : undefined;
+  const upstream = new URL(host ? `https://${host}` : textureUpstreamOrigin());
+  // Assigning the pathname (rather than resolving a relative URL) keeps `//host` paths on the API origin.
+  upstream.pathname = `/${host ? rest.join("/") : path}`;
+  return upstream;
+}
 
 // The API embeds nmsr.nickac.dev player renders; serve the skins.mcstats.com equivalent instead.
 const NMSR_URL = /^https:\/\/nmsr\.nickac\.dev\/([a-z]+)\/([^/?#]+)/;
@@ -35,12 +54,12 @@ function mcstatsRenderUrl(url: string): string | null {
  * skins.mcstats.com.
  */
 export function proxyApiAssetUrls<T>(data: T): T {
-  const prefixes = apiOrigins().map((origin) => `${origin}/`);
+  const prefixes = proxyPrefixes();
 
   const walk = (value: unknown): unknown => {
     if (typeof value === "string") {
-      const prefix = prefixes.find((p) => value.startsWith(p));
-      if (prefix) return `${TEXTURE_PROXY_PATH}/${value.slice(prefix.length)}`;
+      const prefix = prefixes.find(([origin]) => value.startsWith(`${origin}/`));
+      if (prefix) return `${prefix[1]}/${value.slice(prefix[0].length + 1)}`;
       return mcstatsRenderUrl(value) ?? value;
     }
     if (Array.isArray(value)) return value.map(walk);
@@ -56,5 +75,9 @@ export function proxyApiAssetUrls<T>(data: T): T {
 
 /** Points proxied paths in server-rendered markup back at the API, for renderers without an origin. */
 export function unproxyApiAssetUrls(html: string): string {
-  return html.replaceAll(`"${TEXTURE_PROXY_PATH}/`, `"${textureUpstreamOrigin()}/`);
+  let result = html;
+  for (const host of PUBLIC_API_HOSTS) {
+    result = result.replaceAll(`"${TEXTURE_PROXY_PATH}/${host}/`, `"https://${host}/`);
+  }
+  return result.replaceAll(`"${TEXTURE_PROXY_PATH}/`, `"${textureUpstreamOrigin()}/`);
 }

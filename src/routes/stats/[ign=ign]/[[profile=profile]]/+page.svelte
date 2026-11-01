@@ -8,7 +8,7 @@
   import Main from "#lib/layouts/stats/Main.svelte";
   import StatsSkeleton from "#lib/layouts/stats/StatsSkeleton.svelte";
   import type { SectionName } from "#lib/sections/types";
-  import type { ModelsStatsOutput } from "#lib/shared/api/orval-generated";
+  import type { StatsOutput } from "#lib/shared/api/orval-generated";
   import {
     getAllStats,
     getCombinedProfileStats,
@@ -47,7 +47,7 @@
     return { profile, allStats, combined, enchantments };
   }
 
-  function rewriteURL(profile: ModelsStatsOutput) {
+  function rewriteURL(profile: StatsOutput) {
     const { username, profile_cute_name } = profile;
     if (!username) return;
 
